@@ -1,0 +1,28 @@
+{
+  "name": "nyaapi",
+  "version": "1.0.0",
+  "description": "Get your torrents from Nyaa.se",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kylart/Nyaapi.git"
+  },
+  "author": "Kylart",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kylart/Nyaapi/issues"
+  },
+  "homepage": "https://github.com/Kylart/Nyaapi#readme",
+  "dependencies": {
+    "req-fast": "^0.2.17",
+    "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.2.0"
+  }
+}
