@@ -5,7 +5,7 @@ const searchTerm = (term, number = null) => {
   const t1 = new Date()
 
   return new Promise((resolve, reject) => {
-    req(`https://www.nyaa.se/?page=rss&cats=1_0&filter=0&term=${term.replace(' ', '+')}`, (err, resp) => {
+    req(`https://www.nyaa.se/?page=rss&cats=1_0&filter=0&term=${term.split(' ').join('+')}`, (err, resp) => {
       if (err) throw reject(err)
 
       const xml = resp.body
