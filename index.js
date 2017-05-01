@@ -1,3 +1,4 @@
+const ping = require('ping')
 const parseString = require('xml2js').parseString
 const req = require('req-fast')
 
@@ -5,6 +6,10 @@ const searchTerm = (term, number = null) => {
   const t1 = new Date()
 
   return new Promise((resolve, reject) => {
+    ping.sys.probe('nyaa.se', (isAlive) => {
+      if (!isAlive) reject('[Nyaa]: Nyaa.se is down...')
+    })
+
     req(`https://www.nyaa.se/?page=rss&cats=1_0&filter=0&term=${term.split(' ').join('+')}`, (err, resp) => {
       if (err) throw reject(err)
 
