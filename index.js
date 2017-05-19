@@ -1,44 +1,33 @@
 const ping = require('ping')
 const parseString = require('xml2js').parseString
-const req = require('req-fast')
+const axios = require('axios')
 
-const searchTerm = (term, number = null) => {
-  const t1 = new Date()
+const NYAA_PANTSU_URI = 'https://nyaa.pantsu.cat/feed?c=_&s=0&max=99999&userID=0&q='
 
+const searchPantsu = (term, n = null) => {
   return new Promise((resolve, reject) => {
-    ping.sys.probe('nyaa.se', (isAlive) => {
-      if (!isAlive) reject('[Nyaa]: Nyaa.se is down...')
+    ping.sys.probe('nyaa.pantsu.cat', (isAlive) => {
+      if (!isAlive) reject('Nyaa.pantsu.cat is down')
 
-      else
-      {
-      	req(`https://www.nyaa.se/?page=rss&cats=1_0&filter=0&term=${term.split(' ').join('+')}`, (err, resp) => {
-	      if (err) throw reject(err)
+      axios.get(`${NYAA_PANTSU_URI}${term.split(' ').join('+')}`).then(({data}) => {
+        parseString(data, (err, result) => {
+          if (err) reject(err)
 
-	      const xml = resp.body
+          const results = result.feed.entry
 
-	      parseString(xml, (err, result) => {
-	        if (err) reject(err)
-
-	        const t2 = new Date()
-	        const duration = (t2 - t1) / 1000
-
-	        const torrents = result.rss.channel[0].item
-
-	        if (!number) number = torrents.length
-
-	        const statMsg = `[Nyaa]: ${number} torrents gathered in ${duration}s.`
-
-	        resolve({
-	          items: torrents.slice(0, number),
-	          statMsg: statMsg
-	        })
-	      })
-	    })
-      }
+          results === undefined
+            ? reject('[Nyaa]: No result found...')
+            : n
+            ? resolve(results.slice(0, n))
+            : resolve(results)
+        })
+      }).catch((err) => {
+        reject(err)
+      })
     })
   })
 }
 
 module.exports = {
-  searchTerm
+  searchPantsu
 }

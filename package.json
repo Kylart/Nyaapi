@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Kylart/Nyaapi#readme",
   "dependencies": {
-    "req-fast": "^0.2.17",
+    "axios": "^0.16.1",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {

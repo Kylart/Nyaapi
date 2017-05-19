@@ -1,6 +1,6 @@
 # _Nyaapi_
 
-This is an api allowing one to gather torrents directly from nyaa.se in around half a second.
+This is an api allowing one to gather torrents directly from nyaa.si and nyaa.pantsu.cat in about a second or less.
 
 _Nyaapi_ is being developed mainly for [_KawAnime_](https://github.com/Kylart/KawAnime) but anyone can use it for
  its own purpose.
@@ -15,28 +15,25 @@ const nyaa = require('nyaapi')
 const name = '[HorribleSubs] 720p'
  
 // To have ull results
-nyaa.searchTerm(name).then((result) => {
-  console.log(result.items)
-  console.log(result.statMsg)
+nyaa.searchTerm(name).then((data) => {
+  console.log(data)
 })
 
 // To have only n results
 const n = 18
 
-nyaa.searchTerm(name, n).then((result) => {
-  console.log(result.items)
-  console.log(result.statMsg)
+nyaa.searchPantsu(name, n).then((data) => {
+  console.log(data)
 })
 ```
 ```
 // One item is structured this way:
 { 
-  title: [ '[HorribleSubs] Kuzu no Honkai - 12 [720p].mkv' ],
-  category: [ 'Anime - English-translated' ],
-  link: [ 'https://www.nyaa.se/?page=download&tid=912681' ],
-  guid: [ 'https://www.nyaa.se/?page=view&tid=912681' ],
-  description: [ '1265 seeder(s), 100 leecher(s), 11010 download(s) - 277.6 MiB - Trusted' ],
-  pubDate: [ 'Thu, 30 Mar 2017 20:23:33 +0000' ] 
+    title: [ '[HorribleSubs] DanMachi Gaiden - Sword Oratoria - 06 [720p].mkv' ],
+    updated: [ '2017-05-19T18:21:04Z' ],
+    id: [ 'https://nyaa.pantsu.cat/view/924289' ],
+    content: [ [Object] ],
+    link: [ [Object] ] 
 }
 
 ```
