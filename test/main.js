@@ -14,7 +14,7 @@ describe('Nyaa.pantsu.cat', () => {
     it('should return 18 results', function () {
       this.timeout(5000)
 
-      return main.searchPantsu(`${fansub} ${quality}`, number).then((data) => {
+      return main.searchPantsu(`${fansub} ${quality}`, number).then(data => {
         expect(data.length).to.equal(18)
       })
     })
@@ -23,7 +23,7 @@ describe('Nyaa.pantsu.cat', () => {
     it('should return some results', function () {
       this.timeout(5000)
 
-      return main.searchPantsu(`${fansub} ${quality}`, number).then((data) => {
+      return main.searchPantsu(`${fansub} ${quality}`, number).then(data => {
         expect(data.length).to.be.above(1)
       })
     })
@@ -32,8 +32,8 @@ describe('Nyaa.pantsu.cat', () => {
     it('should not have any result', function () {
       this.timeout(1500)
 
-      return main.searchPantsu('[HorribleSabs] 570p', number).catch((err) => {
-        expect(err).to.equal('[Nyaa]: No result found...')
+      return main.searchPantsu('[HorribleSabs] 570p', number).catch(err => {
+        expect(err.message).to.equal('[Nyaa]: No result found...')
       })
     })
   })
@@ -44,7 +44,7 @@ describe('Nyaa.si', () => {
     it('should return 18 results', function () {
       this.timeout(1500)
 
-      return main.searchSi(`${fansub} ${quality}`, number).then((data) => {
+      return main.searchSi(`${fansub} ${quality}`, number).then(data => {
         expect(data.length).to.equal(18)
       })
     })
@@ -53,7 +53,7 @@ describe('Nyaa.si', () => {
     it('should return some results', function () {
       this.timeout(1500)
 
-      return main.searchSi(`${fansub} ${quality}`, number).then((data) => {
+      return main.searchSi(`${fansub} ${quality}`, number).then(data => {
         expect(data.length).to.be.above(1)
       })
     })
@@ -62,8 +62,8 @@ describe('Nyaa.si', () => {
     it('should not have any result', function () {
       this.timeout(1500)
 
-      return main.searchSi('[HorribleSabs] 570p', number).catch((err) => {
-        expect(err).to.equal('[Nyaa]: No result found...')
+      return main.searchSi('[HorribleSabs] 570p', number).catch(err => {
+        expect(err.message).to.equal('[Nyaa]: No result found...')
       })
     })
   })

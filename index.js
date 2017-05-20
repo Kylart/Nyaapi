@@ -8,7 +8,7 @@ const NYAA_SI_URI = 'https://nyaa.si/?page=rss&c=1_0&f=0&q='
 const searchPantsu = (term, n = null) => {
   return new Promise((resolve, reject) => {
     ping.sys.probe('nyaa.pantsu.cat', (isAlive) => {
-      if (!isAlive) reject('Nyaa.pantsu.cat is down.')
+      if (!isAlive) reject(new Error('Nyaa.pantsu.cat is down.'))
 
       axios.get(`${NYAA_PANTSU_URI}${term.split(' ').join('+')}`).then(({data}) => {
         parseString(data, (err, result) => {
@@ -17,7 +17,7 @@ const searchPantsu = (term, n = null) => {
           const results = result.rss.channel[0].item
 
           results === undefined
-            ? reject('[Nyaa]: No result found...')
+            ? reject(new Error('[Nyaa]: No result found...'))
             : n
             ? resolve(results.slice(0, n))
             : resolve(results)
@@ -32,7 +32,7 @@ const searchPantsu = (term, n = null) => {
 const searchSi = (term, n = null) => {
   return new Promise((resolve, reject) => {
     ping.sys.probe('nyaa.si', (isAlive) => {
-      if (!isAlive) reject('Nyaa.si is down.')
+      if (!isAlive) reject(new Error('Nyaa.si is down.'))
 
       axios.get(`${NYAA_SI_URI}${term.split(' ').join('+')}`).then(({data}) => {
         parseString(data, (err, result) => {
@@ -41,18 +41,21 @@ const searchSi = (term, n = null) => {
           const results = result.rss.channel[0].item
 
           results === undefined
-            ? reject('[Nyaa]: No result found...')
+            ? reject(new Error('[Nyaa]: No result found...'))
             : n
             ? resolve(results.slice(0, n))
             : resolve(results)
         })
-
       }).catch((err) => {
         reject(err)
       })
     })
   })
 }
+
+searchPantsu('HorribleSubs 720p').then((result) => {
+  console.log(result)
+})
 
 module.exports = {
   searchPantsu,
