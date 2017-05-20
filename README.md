@@ -9,6 +9,11 @@ _Nyaapi_ is being developed mainly for [_KawAnime_](https://github.com/Kylart/Ka
 
 Any contribution is welcomed.
 
+# Install
+```
+npm install --save nyaapi
+```
+
 # Use
 
 ```javascript
