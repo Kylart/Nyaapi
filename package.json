@@ -19,7 +19,6 @@
   "homepage": "https://github.com/Kylart/Nyaapi#readme",
   "dependencies": {
     "axios": "^0.16.1",
-    "ping": "^0.2.2",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
