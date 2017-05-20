@@ -53,10 +53,6 @@ const searchSi = (term, n = null) => {
   })
 }
 
-searchPantsu('HorribleSubs 720p').then((result) => {
-  console.log(result)
-})
-
 module.exports = {
   searchPantsu,
   searchSi

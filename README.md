@@ -1,4 +1,4 @@
-# _Nyaapi_
+# _Nyaapi_  [![Build Status](https://travis-ci.org/Kylart/Nyaapi.svg?branch=master)](https://travis-ci.org/Kylart/Nyaapi)
 
 [![JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
