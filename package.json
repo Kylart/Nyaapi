@@ -1,7 +1,7 @@
 {
   "name": "nyaapi",
-  "version": "1.2.1",
-  "description": "Get your torrents from Nyaa.se",
+  "version": "1.2.2",
+  "description": "Non-official api for getting torrent links from Nyaa.si and Nyaa.pantsu.cat",
   "main": "index.js",
   "scripts": {
     "lint": "standard --verbose --fix",
@@ -13,6 +13,13 @@
   },
   "author": "Kylart",
   "license": "MIT",
+  "keywords": [
+  	"kawanime",
+  	"nyaa-si",
+  	"nyaa-pantsu",
+  	"torrent",
+  	"magnet-links"
+  ],
   "bugs": {
     "url": "https://github.com/Kylart/Nyaapi/issues"
   },
