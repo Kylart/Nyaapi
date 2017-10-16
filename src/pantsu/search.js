@@ -9,7 +9,7 @@ const URI = require('./url.json').url
  *
  * @param {string} term Keywords describing the research
  * @param {number} n Number of results wanted (Defaults to null)
- * @param {object} opts Research options as described on the official documentation (optional)
+ * @param {Object} opts Research options as described on the official documentation (optional)
  *
  * @returns {promise}
  */
@@ -46,7 +46,7 @@ const search = (term, n = null, opts = {}) => {
  * Research anything you desire on nyaa.pantsu.cat every single result.
  *
  * @param {string} term Keywords describing the research
- * @param {object} opts Research options as described on the official documentation (optional)
+ * @param {Object} opts Research options as described on the official documentation (optional)
  * @param {boolean} silence Should nyaapi give some details?
  *
  * @returns {promise}
