@@ -4,6 +4,7 @@ const upload = require('./upload.js')
 const update = require('./update.js')
 const login = require('./login')
 const checkUser = require('./checkUser.js')
+const header = require('./header.js')
 
 module.exports = {
   ...search,
@@ -11,5 +12,6 @@ module.exports = {
   ...upload,
   ...update,
   ...login,
-  ...checkUser
+  ...checkUser,
+  ...header
 }
