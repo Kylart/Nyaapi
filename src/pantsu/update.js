@@ -1,4 +1,5 @@
-const axios = require('axios')
+const req = require('request-promise')
+const _ = require('lodash')
 
 const URI = require('./url.json').url
 
@@ -16,26 +17,14 @@ const update = (opts = {}) => {
       reject(new Error('[Nyaapi]: No ID or Token given on update demand.'))
     }
 
-    axios({
-      method: 'post',
-      url: URI + 'update',
+    req.put({
+      url: `${URI}update`,
       headers: {
         'Authorization': opts.token
       },
-      data: {
-        username: opts.username || null,
-        id: opts.id,
-        name: opts.name || null,
-        category: opts.category || null,
-        remake: opts.remake || null,
-        description: opts.description || null,
-        status: opts.status || null,
-        hidden: opts.hidden || null,
-        website_link: opts.website_link || null,
-        languages: opts.languages || null
-      }
+      formData: _.omit(opts, 'token')
     })
-      .then(({data}) => resolve(data))
+      .then((data) => resolve(data))
       .catch((err) => reject(err))
   })
 }
