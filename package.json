@@ -27,7 +27,10 @@
   "dependencies": {
     "axios": "^0.16.1",
     "cheerio": "^1.0.0-rc.2",
+    "form-data": "^2.3.1",
     "lodash": "^4.17.4",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
