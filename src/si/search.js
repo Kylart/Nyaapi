@@ -5,11 +5,11 @@ const {extractFromHTML} = require('./scrap.js')
 const URI = require('./url.json').url
 
 /**
- * Allows to scrap only one specific page of a research
+ * Allows to scrap only one specific page of a research.
  *
  * @param {string} term Keywords describing the research.
- * @param {number} p The page you want to look for.
- * @param {object} opts Research options as described on the official documentation (optional)
+ * @param {number} p    The page you want to look for.
+ * @param {object} opts Research options as described on the documentation.
  *
  * @returns {promise}
  */
@@ -44,27 +44,27 @@ const searchPage = (term = null, p, opts = {}) => {
 
 /**
  *
- * Research anything you desire on nyaa.si
+ * Research anything you desire on nyaa.si and get all the results.
  *
- * @param {string} term Keywords describing the research
- * @param {Object} opts Research options as described on the official documentation (optional)
+ * @param {string} term Keywords describing the research.
+ * @param {Object} opts Research options as described on the documentation.
  *
  * @returns {promise}
  */
 
 const searchAll = (term = null, opts = {}) => {
   return new Promise(async (resolve, reject) => {
+    if (typeof term === 'object') {
+      opts = term
+      term = opts.term
+    }
+
     let page = 1
     let results = []
     let tmpData = []
 
     if (!term) {
       reject(new Error('[Nyaapi]: No search term was given.'))
-    }
-
-    if (typeof term === 'object') {
-      opts = term
-      term = opts.term
     }
 
     while (page <= 15) {
@@ -86,11 +86,11 @@ const searchAll = (term = null, opts = {}) => {
 
 /**
  *
- * Research anything you desire on nyaa.si
+ * Research anything you desire on nyaa.si.
  *
- * @param {string} term Keywords describing the research
- * @param {number} n Number of results wanted (Defaults to null)
- * @param {Object} opts Research options as described on the official documentation (optional)
+ * @param {string} term Keywords describing the research.
+ * @param {number} n    Number of results wanted (Defaults to null).
+ * @param {Object} opts Research options as described on the documentation.
  *
  * @returns {promise}
  */
@@ -129,13 +129,13 @@ const search = (term = null, n = null, opts = {}) => {
 
 /**
  *
- * Research anything you desire according to a certain user and a specific page on nyaa.si
+ * Research anything you desire according to a certain user and a specific page on nyaa.si.
  *
  * @param {string} user The user you want to spy on.
  * @param {string} term Keywords describing the research.
- * @param {number} p The page you want to look for.
- * @param {number} n Number of results wanted on this page (Defaults to null).
- * @param {Object} opts Research options as described on the official documentation (optional).
+ * @param {number} p    The page you want to look for.
+ * @param {number} n    Number of results wanted on this page (Defaults to null).
+ * @param {Object} opts Research options as described on the documentation.
  *
  * @returns {promise}
  */
@@ -172,11 +172,11 @@ const searchByUserAndByPage = (user = null, term = null, p = null, n = null, opt
 
 /**
  *
- * Research anything you desire according to a certain user on nyaa.si
+ * Research anything you desire according to a certain user on nyaa.si and get all the results.
  *
  * @param {string} user The user you want to spy on.
  * @param {string} term Keywords describing the research.
- * @param {Object} opts Research options as described on the official documentation (optional).
+ * @param {Object} opts Research options as described on the documentation.
  *
  * @returns {promise}
  */
@@ -224,8 +224,8 @@ const searchAllByUser = (user = null, term = null, opts = null) => {
  *
  * @param {string} user The user you want to spy on.
  * @param {string} term Keywords describing the research.
- * @param {number} n Number of results wanted on this page (Defaults to null).
- * @param {Object} opts Research options as described on the official documentation (optional).
+ * @param {number} n    Number of results wanted on this page (Defaults to null).
+ * @param {Object} opts Research options as described on the documentation.
  *
  * @returns {promise}
  */
