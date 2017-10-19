@@ -176,6 +176,54 @@ const searchByUserAndByPage = (user = null, term = null, p = null, n = null, opt
  *
  * @param {string} user The user you want to spy on.
  * @param {string} term Keywords describing the research.
+ * @param {Object} opts Research options as described on the official documentation (optional).
+ *
+ * @returns {promise}
+ */
+
+const searchAllByUser = (user = null, term = null, opts = null) => {
+  return new Promise(async (resolve, reject) => {
+    if (typeof term === 'object') {
+      opts = user
+      term = opts.term
+      user = opts.user
+    }
+
+    let page = 1
+    let results = []
+    let tmpData = []
+
+    if (!user) {
+      reject(new Error('[Nyaapi]: No user was given.'))
+    }
+
+    while (page <= 15) {
+      // We stop at page === 15 because nyaa.si offers a maximum of 1000 results on standard research
+      try {
+        results = _.concat(results, tmpData)
+
+        tmpData = await searchByUserAndByPage({
+          user,
+          term,
+          p: page,
+          ...opts
+        })
+        ++page
+      } catch (e) {
+        reject(e)
+      }
+    }
+
+    resolve(results)
+  })
+}
+
+/**
+ *
+ * Research anything you desire according to a certain user on nyaa.si
+ *
+ * @param {string} user The user you want to spy on.
+ * @param {string} term Keywords describing the research.
  * @param {number} n Number of results wanted on this page (Defaults to null).
  * @param {Object} opts Research options as described on the official documentation (optional).
  *
@@ -195,7 +243,7 @@ const searchByUser = (user = null, term = null, n = null, opts = {}) => {
 
     // If there is no n, then the user's asking for all the results, right?
     if (!n) {
-      // resolve(searchAllByUser(user, term, opts))
+      resolve(searchAllByUser(user, term, opts))
     } else {
       let results = []
       let tmpData = []
@@ -227,5 +275,6 @@ module.exports = {
   searchAll,
   searchPage,
   searchByUser,
+  searchAllByUser,
   searchByUserAndByPage
 }
