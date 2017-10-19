@@ -132,22 +132,22 @@ const search = (term = null, n = null, opts = {}) => {
  * Research anything you desire according to a certain user and a specific page on nyaa.si
  *
  * @param {string} user The user you want to spy on.
- * @param {number} p The page you want to look for.
  * @param {string} term Keywords describing the research.
+ * @param {number} p The page you want to look for.
  * @param {number} n Number of results wanted on this page (Defaults to null).
  * @param {Object} opts Research options as described on the official documentation (optional).
  *
  * @returns {promise}
  */
 
-const searchByUserAndByPage = (user = null, p = null, term = null, n = null, opts = {}) => {
+const searchByUserAndByPage = (user = null, term = null, p = null, n = null, opts = {}) => {
   return new Promise((resolve, reject) => {
     if (typeof user === 'object') {
       opts = user
       user = opts.user
       p = opts.p
       term = term || opts.term
-      n = n || opts.n
+      n = n || opts.n || 75
     }
 
     if (!user) reject(new Error('[Nyaapi]: No user given on search demand.'))
@@ -170,9 +170,62 @@ const searchByUserAndByPage = (user = null, p = null, term = null, n = null, opt
   })
 }
 
+/**
+ *
+ * Research anything you desire according to a certain user on nyaa.si
+ *
+ * @param {string} user The user you want to spy on.
+ * @param {string} term Keywords describing the research.
+ * @param {number} n Number of results wanted on this page (Defaults to null).
+ * @param {Object} opts Research options as described on the official documentation (optional).
+ *
+ * @returns {promise}
+ */
+
+const searchByUser = (user = null, term = null, n = null, opts = {}) => {
+  return new Promise(async (resolve, reject) => {
+    if (typeof user === 'object') {
+      opts = user
+      user = opts.user
+      term = term || opts.term
+      n = n || opts.n
+    }
+
+    if (!user) reject(new Error('[Nyaapi]: No user given on search demand.'))
+
+    // If there is no n, then the user's asking for all the results, right?
+    if (!n) {
+      // resolve(searchAllByUser(user, term, opts))
+    } else {
+      let results = []
+      let tmpData = []
+      let page = 1
+      const maxPage = Math.ceil(n / 75)
+
+      while (page <= maxPage) {
+        try {
+          tmpData = await searchByUserAndByPage({
+            user,
+            term,
+            p: page,
+            ...opts
+          })
+          results = _.concat(results, tmpData)
+          ++page
+        } catch (e) {
+          reject(e)
+        }
+      }
+
+      resolve(results.slice(0, n))
+    }
+  })
+}
+
 module.exports = {
   search,
   searchAll,
   searchPage,
+  searchByUser,
   searchByUserAndByPage
 }
