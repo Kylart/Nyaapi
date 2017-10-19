@@ -129,19 +129,44 @@ const search = (term = null, n = null, opts = {}) => {
 
 /**
  *
- * Research anything you desire according to a certain user on nyaa.si
+ * Research anything you desire according to a certain user and a specific page on nyaa.si
  *
  * @param {string} user The user you want to spy on.
+ * @param {number} p The page you want to look for.
  * @param {string} term Keywords describing the research.
- * @param {number} n Number of results wanted (Defaults to null).
+ * @param {number} n Number of results wanted on this page (Defaults to null).
  * @param {Object} opts Research options as described on the official documentation (optional).
  *
  * @returns {promise}
  */
 
-const searchByUser = (user = null, term = null, n = null, opts = {}) => {
+const searchByUserAndByPage = (user = null, p = null, term = null, n = null, opts = {}) => {
   return new Promise((resolve, reject) => {
+    if (typeof user === 'object') {
+      opts = user
+      user = opts.user
+      p = opts.p
+      term = term || opts.term
+      n = n || opts.n
+    }
 
+    if (!user) reject(new Error('[Nyaapi]: No user given on search demand.'))
+    if (!p) reject(new Error('[Nyaapi]: No page given on search by page demand.'))
+
+    axios.get(`${URI}user/${user}`, {
+      params: {
+        f: opts.filter || 0,
+        c: opts.category || '1_0',
+        q: term || '',
+        p: p
+      }
+    })
+      .then(({data}) => {
+        const results = extractFromHTML(data)
+
+        resolve(results.slice(0, n))
+      })
+      .catch((err) => reject(err))
   })
 }
 
@@ -149,5 +174,5 @@ module.exports = {
   search,
   searchAll,
   searchPage,
-  searchByUser
+  searchByUserAndByPage
 }
