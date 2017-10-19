@@ -1,11 +1,8 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
+const _ = require('lodash')
 
 const URI = require('./url.json').url
-
-const _getChild = ($, ctx, nb) => {
-  return $(ctx).find(`td:nth-child(${nb})`)
-}
 
 const _searchPage = (term, p, opts = {}) => {
   return new Promise((resolve, reject) => {
@@ -71,9 +68,40 @@ const _searchPage = (term, p, opts = {}) => {
  * @returns {promise}
  */
 
-const searchAll = (term, opts) => {
-  return new Promise((resolve, reject) => {
+const searchAll = (term = null, opts = {}) => {
+  return new Promise(async (resolve, reject) => {
+    let page = 1
+    let results = []
+    let tmpData = []
 
+    if (!term) {
+      reject(new Error('[Nyaapi]: No search term was given.'))
+    }
+
+    if (typeof term === 'object') {
+      term = term.term
+    }
+
+    try {
+      tmpData = await _searchPage(term, page, opts)
+    } catch (e) {
+      reject(e)
+    }
+
+    while (tmpData.length && page < 15) {
+      // We stop at page === 15 because nyaa.si offers a maximum of 1000 results
+      // which means 14 pages of 75 results with the last one containing only 25.
+      try {
+        results = _.concat(results, tmpData)
+
+        ++page
+        tmpData = await _searchPage(term, page, opts)
+      } catch (e) {
+        reject(e)
+      }
+    }
+
+    resolve(results)
   })
 }
 
