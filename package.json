@@ -4,7 +4,7 @@
   "description": "Non-official api for getting torrent links from Nyaa.si and Nyaa.pantsu.cat",
   "main": "src/index.js",
   "scripts": {
-    "lint": "standard --verbose --fix",
+    "lint": "standard --verbose --fix | snazzy",
     "test": "npm run lint && mocha"
   },
   "repository": {
@@ -37,6 +37,7 @@
     "colors": "^1.1.2",
     "mocha": "^3.2.0",
     "pre-commit": "^1.2.2",
+    "snazzy": "^7.0.0",
     "standard": "^10.0.2"
   },
   "standard": {
