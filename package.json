@@ -56,7 +56,9 @@
       "**/node_modules/**",
       "src/si/upload.js",
       "src/pantsu/upload.js",
-      "src/pantsu/update.js"
+      "src/pantsu/update.js",
+      "src/pantsu/login.js",
+      "src/pantsu/header.js"
     ]
   },
   "pre-commit": [

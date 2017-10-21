@@ -7,37 +7,36 @@ const URI = require('./url.json').url
  *
  * Research anything you desire on nyaa.pantsu.cat
  *
- * @param {string} term Keywords describing the research
- * @param {number} n Number of results wanted (Defaults to null)
- * @param {Object} opts Research options as described on the official documentation (optional)
+ * @param {string} term Keywords describing the research.
+ * @param {number} n    Number of results wanted (Defaults to null).
+ * @param {Object} opts Research options as described on the official documentation (optional).
  *
  * @returns {promise}
  */
 
 const search = (term, n = null, opts = {}) => {
   return new Promise((resolve, reject) => {
+    if (!term || (typeof term === 'object' && !term.term)) {
+      reject(new Error('[Nyaapi]: No term given on search demand.'))
+      return
+    }
+
+    if (typeof term === 'object') {
+      opts = term
+      term = opts.term
+      n = opts.n
+    }
+
     axios.get(URI + 'search', {
       params: {
         c: opts.c || [],
-        q: term || opts.q,
-        page: opts.page || null,
+        q: term,
         limit: n || 99999,
-        userID: opts.userID || null,
-        fromID: opts.fromID || null,
-        s: opts.s || null,
-        maxage: opts.maxage || null,
-        toDate: opts.toDate || null,
-        fromDate: opts.fromDate || null,
-        minSize: opts.minSize || null,
-        maxSize: opts.maxSize || null,
-        sizeType: opts.sizeType || null,
-        sort: opts.sort || null,
-        order: opts.order || null,
-        lang: opts.lang || null
+        ..._.omit(opts, 'c', 'q', 'n')
       }
     })
       .then(({data}) => resolve(data.torrents))
-      .catch(err => reject(err))
+      .catch(/* istanbul ignore next */ (err) => reject(err))
   })
 }
 
@@ -45,31 +44,42 @@ const search = (term, n = null, opts = {}) => {
  *
  * Research anything you desire on nyaa.pantsu.cat every single result.
  *
- * @param {string} term Keywords describing the research
- * @param {Object} opts Research options as described on the official documentation (optional)
- * @param {boolean} silence Should nyaapi give some details?
+ * @param {string} term Keywords describing the research.
+ * @param {Object} opts Research options as described on the official documentation (optional).
  *
  * @returns {promise}
  */
 
-const searchAll = (term, opts = {}, silence = true) => {
+const searchAll = (term, opts = {}) => {
   return new Promise(async (resolve, reject) => {
+    if (!term || (typeof term === 'object' && !term.term)) {
+      reject(new Error('[Nyaapi]: No term given on search demand.'))
+      return
+    }
+
+    if (typeof term === 'object') {
+      opts = term
+      term = opts.term
+    }
+
     let results = []
+    let torrents = []
     opts.page = 1
+    let _continue = true
 
     try {
-      let torrents = await search(term, null, opts)
-
-      while (torrents.length !== 0) {
+      while (_continue && opts.page < 4) {
+        // We stop at 900 results, that should be enough
+        torrents = await search(term, null, opts)
         ++opts.page
         results = _.concat(results, torrents)
-        torrents = await search(term, null, opts)
-      }
 
-      !silence && console.log(`[Nyaa]: Scrapped ${opts.page} page${opts.page === 1 ? '' : 's'} to get ${results.length} results.`)
+        _continue = torrents.length
+      }
 
       resolve(results)
     } catch (e) {
+      /* istanbul ignore next */
       reject(e)
     }
   })

@@ -14,11 +14,12 @@ const infoRequest = (id) => {
   return new Promise((resolve, reject) => {
     if (!id) {
       reject(new Error('[Nyaapi]: No ID given on request demand.'))
-    } else {
-      axios.get(`${URI}view/${id}`)
-        .then(({data}) => resolve(data))
-        .catch((err) => reject(err))
+      return
     }
+
+    axios.get(`${URI}view/${id}`)
+      .then(({data}) => resolve(data))
+      .catch(/* istanbul ignore next */ (err) => reject(err))
   })
 }
 

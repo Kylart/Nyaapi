@@ -13,14 +13,14 @@ const URI = require('./url.json').url
 const checkUser = (id) => {
   return new Promise((resolve, reject) => {
     if (!id) {
-      reject(new Error('[Nyaapi]: No username was given on user check demand.'))
+      reject(new Error('[Nyaapi]: No ID was given on user check demand.'))
     }
 
     axios.get(URI + 'profile', {
       params: {id}
     })
       .then(({data}) => resolve(data))
-      .catch((err) => reject(err))
+      .catch(/* istanbul ignore next */ (err) => reject(err))
   })
 }
 
