@@ -15,12 +15,11 @@ const URI = require('./url.json').url
  * Allows the uploading of torrent file to nyaa.pantsu.cat
  *
  * @param {Object} opts Options.
- * @param {boolean} verbose Whether or not Nyaapi should give the upload progress.
  *
  * @returns {promise}
  */
 
-const upload = (opts = {}, verbose = false) => {
+const upload = (opts = {}) => {
   return new Promise((resolve, reject) => {
     if ((!opts.magnet && !opts.torrent) || !opts.token || !opts.username) {
       reject(new Error('[Nyaapi]: No file/torrent, token or username were given.'))
