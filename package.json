@@ -7,7 +7,9 @@
     "lint": "standard --verbose --fix | snazzy",
     "test:si": "nyc ava --verbose --serial test/si.test.js",
     "test:pantsu": "nyc ava --verbose --serial test/pantsu.test.js",
-    "test": "npm run lint && nyc ava --verbose --serial test"
+    "test": "npm run lint && nyc ava --verbose --serial test",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "cloc": "cloc $(git ls-files)"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,8 @@
   },
   "devDependencies": {
     "ava": "^0.22.0",
+    "cloc": "^2.3.2",
+    "codecov": "^2.3.1",
     "colors": "^1.1.2",
     "nyc": "^11.2.1",
     "pre-commit": "^1.2.2",

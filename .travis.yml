@@ -6,6 +6,8 @@ install:
   - npm install
 script:
   - npm test
+  - npm run cloc
+after_success: npm run coverage
 
 notifications:
   email: false
