@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "standard --verbose --fix | snazzy",
-    "test": "npm run lint && mocha"
+    "test:si": "nyc ava --verbose --serial test/si.test.js",
+    "test:pantsu": "nyc ava --verbose --serial test/pantsu.test.js",
+    "test": "npm run lint && nyc ava --verbose --serial test"
   },
   "repository": {
     "type": "git",
@@ -32,10 +34,9 @@
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
+    "ava": "^0.22.0",
     "colors": "^1.1.2",
-    "mocha": "^3.2.0",
+    "nyc": "^11.2.1",
     "pre-commit": "^1.2.2",
     "snazzy": "^7.0.0",
     "standard": "^10.0.2"
@@ -43,6 +44,15 @@
   "standard": {
     "ignore": [
       "test/*.js"
+    ]
+  },
+  "nyc": {
+    "exclude": [
+      "**/*.test.js",
+      "**/node_modules/**",
+      "src/si/upload.js",
+      "src/pantsu/upload.js",
+      "src/pantsu/update.js"
     ]
   },
   "pre-commit": [
