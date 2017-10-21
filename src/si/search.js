@@ -14,15 +14,16 @@ const URI = require('./url.json').url
  * @returns {promise}
  */
 
-const searchPage = (term = null, p, opts = {}) => {
+const searchPage = (term = '', p, opts = {}) => {
   return new Promise((resolve, reject) => {
+    if (!term) reject(new Error('[Nyaapi]: No term was given on search demand.'))
+
     if (typeof term === 'object') {
       opts = term
       term = opts.term
       p = p || opts.p
     }
 
-    if (!term) reject(new Error('[Nyaapi]: No term was given on search demand.'))
     if (!p) reject(new Error('[Nyaapi]: No page number was given on search page demand.'))
 
     axios.get(URI, {
@@ -38,7 +39,7 @@ const searchPage = (term = null, p, opts = {}) => {
 
         resolve(results)
       })
-      .catch((err) => reject(err))
+      .catch(/* istanbul ignore next */ (err) => reject(err))
   })
 }
 
@@ -52,8 +53,13 @@ const searchPage = (term = null, p, opts = {}) => {
  * @returns {promise}
  */
 
-const searchAll = (term = null, opts = {}) => {
+const searchAll = (term = '', opts = {}) => {
   return new Promise(async (resolve, reject) => {
+    if (!term || (typeof term === 'object' && !term.term)) {
+      reject(new Error('[Nyaapi]: No search term was given.'))
+      return
+    }
+
     if (typeof term === 'object') {
       opts = term
       term = opts.term
@@ -62,12 +68,9 @@ const searchAll = (term = null, opts = {}) => {
     let page = 1
     let results = []
     let tmpData = []
+    let _continue = true
 
-    if (!term) {
-      reject(new Error('[Nyaapi]: No search term was given.'))
-    }
-
-    while (page <= 15) {
+    while (_continue && page <= 15) {
       // We stop at page === 15 because nyaa.si offers a maximum of 1000 results
       // which means 14 pages of 75 results with the last one containing only 25.
       try {
@@ -75,7 +78,10 @@ const searchAll = (term = null, opts = {}) => {
 
         tmpData = await searchPage(term, page, opts)
         ++page
+
+        _continue = tmpData.length
       } catch (e) {
+        /* istanbul ignore next */
         reject(e)
       }
     }
@@ -95,8 +101,13 @@ const searchAll = (term = null, opts = {}) => {
  * @returns {promise}
  */
 
-const search = (term = null, n = null, opts = {}) => {
+const search = (term = '', n = null, opts = {}) => {
   return new Promise(async (resolve, reject) => {
+    if (!term || (typeof term === 'object' && !term.term)) {
+      reject(new Error('[Nyaapi]: No term given on search demand.'))
+      return
+    }
+
     if (typeof term === 'object') {
       opts = term
       term = opts.term
@@ -118,6 +129,7 @@ const search = (term = null, n = null, opts = {}) => {
           results = _.concat(results, tmpData)
           ++page
         } catch (e) {
+          /* istanbul ignore next */
           reject(e)
         }
       }
@@ -140,8 +152,10 @@ const search = (term = null, n = null, opts = {}) => {
  * @returns {promise}
  */
 
-const searchByUserAndByPage = (user = null, term = null, p = null, n = null, opts = {}) => {
+const searchByUserAndByPage = (user = null, term = '', p = null, n = null, opts = {}) => {
   return new Promise((resolve, reject) => {
+    if (!user) reject(new Error('[Nyaapi]: No user given on search demand.'))
+
     if (typeof user === 'object') {
       opts = user
       user = opts.user
@@ -150,7 +164,6 @@ const searchByUserAndByPage = (user = null, term = null, p = null, n = null, opt
       n = n || opts.n || 75
     }
 
-    if (!user) reject(new Error('[Nyaapi]: No user given on search demand.'))
     if (!p) reject(new Error('[Nyaapi]: No page given on search by page demand.'))
 
     axios.get(`${URI}user/${user}`, {
@@ -158,15 +171,15 @@ const searchByUserAndByPage = (user = null, term = null, p = null, n = null, opt
         f: opts.filter || 0,
         c: opts.category || '1_0',
         q: term || '',
-        p: p
+        p
       }
     })
       .then(({data}) => {
         const results = extractFromHTML(data)
 
-        resolve(results.slice(0, n))
+        resolve(results.slice(0, n || results.length))
       })
-      .catch((err) => reject(err))
+      .catch(/* istanbul ignore next */ (err) => reject(err))
   })
 }
 
@@ -181,9 +194,14 @@ const searchByUserAndByPage = (user = null, term = null, p = null, n = null, opt
  * @returns {promise}
  */
 
-const searchAllByUser = (user = null, term = null, opts = null) => {
+const searchAllByUser = (user = null, term = '', opts = null) => {
   return new Promise(async (resolve, reject) => {
-    if (typeof term === 'object') {
+    if (!user || (typeof user === 'object' && user && !user.user)) {
+      reject(new Error('[Nyaapi]: No user was given.'))
+      return
+    }
+
+    if (typeof user === 'object') {
       opts = user
       term = opts.term
       user = opts.user
@@ -192,12 +210,9 @@ const searchAllByUser = (user = null, term = null, opts = null) => {
     let page = 1
     let results = []
     let tmpData = []
+    let _continue = true
 
-    if (!user) {
-      reject(new Error('[Nyaapi]: No user was given.'))
-    }
-
-    while (page <= 15) {
+    while (_continue && page <= 15) {
       // We stop at page === 15 because nyaa.si offers a maximum of 1000 results on standard research
       try {
         results = _.concat(results, tmpData)
@@ -209,7 +224,10 @@ const searchAllByUser = (user = null, term = null, opts = null) => {
           ...opts
         })
         ++page
+
+        _continue = tmpData.length
       } catch (e) {
+        /* istanbul ignore next */
         reject(e)
       }
     }
@@ -230,16 +248,19 @@ const searchAllByUser = (user = null, term = null, opts = null) => {
  * @returns {promise}
  */
 
-const searchByUser = (user = null, term = null, n = null, opts = {}) => {
+const searchByUser = (user = null, term = '', n = null, opts = {}) => {
   return new Promise(async (resolve, reject) => {
+    if (!user || (typeof user === 'object' && user && !user.user)) {
+      reject(new Error('[Nyaapi]: No user given on search demand.'))
+      return
+    }
+
     if (typeof user === 'object') {
       opts = user
       user = opts.user
-      term = term || opts.term
+      term = term || opts.term || ''
       n = n || opts.n
     }
-
-    if (!user) reject(new Error('[Nyaapi]: No user given on search demand.'))
 
     // If there is no n, then the user's asking for all the results, right?
     if (!n) {
@@ -261,6 +282,7 @@ const searchByUser = (user = null, term = null, n = null, opts = {}) => {
           results = _.concat(results, tmpData)
           ++page
         } catch (e) {
+          /* istanbul ignore next */
           reject(e)
         }
       }
