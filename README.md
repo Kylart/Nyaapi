@@ -1,11 +1,36 @@
-# _Nyaapi_  [![Build Status](https://travis-ci.org/Kylart/Nyaapi.svg?branch=master)](https://travis-ci.org/Kylart/Nyaapi)
+<h1 align="center">Nyaapi 2.0</h1>
 
-[![JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+<p align="center">
+  <a href="http://forthebadge.com/" target="_blank">
+    <img src="http://forthebadge.com/images/badges/built-with-love.svg"/>
+  </a>
+</p>
 
-This is an api allowing one to gather torrents directly from nyaa.si and nyaa.pantsu.cat in about a second or less.
+<p align="center">
+  <a href="https://standardjs.com/" target="_blank">
+    <img src="https://cdn.rawgit.com/feross/standard/master/badge.svg" />
+  </a>
+</p>
 
-_Nyaapi_ is being developed mainly for [_KawAnime_](https://github.com/Kylart/KawAnime) but anyone can use it for
- its own purpose.
+<p align="center">
+  <a href="https://travis-ci.org/Kylart/Nyaapi" target="_blank">
+    <img src="https://travis-ci.org/Kylart/Nyaapi.svg?branch=master" alt="Build Status">
+  </a>
+  <a href="https://codecov.io/gh/Kylart/Nyaapi" target="_blank">
+    <img src="https://codecov.io/gh/Kylart/Nyaapi/branch/master/graph/badge.svg" alt="Codecov" />
+  </a>
+  <a href="https://opensource.org/licenses/MIT" target="_blank">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
+  </a>
+</p>
+
+This is an api allowing one to:
+* gather torrents directly from [nyaa.si](https://nyaa.si) and [nyaa.pantsu.cat](https://nyaa.pantsu.cat) in about a second or less.
+* upload a torrent to any nyaa.
+* check a user's profile and torrents.
+* So many things you should check the wiki to understand better.
+
+All the documentation there is to know about how to use Nyaapi is located in the [wiki](https://github.com/Kylart/Nyaapi/wiki).
 
 Any contribution is welcomed.
 
@@ -15,69 +40,38 @@ npm install --save nyaapi
 ```
 
 # Use
-
+Nyaapi is organised with `si` methods and `pantsu` methods.
+You can access either of them like so:
 ```javascript
-const nyaa = require('nyaapi')
- 
-const term = '[HorribleSubs] 720p'
- 
-// To have all results
-nyaa.searchPantsu(term).then((data) => {
-  console.log(data)
-}).catch((err) => {
-  console.log(err.message)
-})
- 
-// OR
- 
-nyaa.searchSi(term).then((data) => {
-  console.log(data)
-}).catch((err) => {
-  console.log(err.message)
-})
- 
-// To have only n results
-const n = 18
- 
-nyaa.searchPantsu(term, n).then((data) => {
-  console.log(data)
-}).catch((err) => {
-  console.log(err.message)
-})
- 
-// OR
- 
-nyaa.searchSi(term, n).then((data) => {
-  console.log(data)
-}).catch((err) => {
-  console.log(err.message)
-})
+const {si, pantsu} = require('nyaapi')
+
+console.log(si)
+/**
+ * [Si] methods:
+ *   > search
+ *   > searchAll
+ *   > searchPage
+ *   > searchByUser
+ *   > searchAllByUser
+ *   > searchByUserAndByPage
+ *   > upload
+ * 
+ */
+console.log(pantsu)
+/**
+ * [Pantsu] methods:
+ *   > search
+ *   > searchAll
+ *   > infoRequest
+ *   > upload
+ *   > update
+ *   > login
+ *   > checkUser
+ *   > checkHeader
+ * 
+ */
 ```
 
-```
-// One item will be structure this way
-// For nyaa.si (searchSi)
+It is important to know that all the pantsu methods are fully based on [the offcial api of nyaa.pantsu.cat](https://nyaa.pantsu.cat/apidoc).
 
-{ 
-    title: [ '[HorribleSubs] Detective Conan - 860 [720p].mkv' ],
-    link: [ 'https://nyaa.si/view/924806/torrent' ],
-    guid: [ [Object] ],
-    pubDate: [ 'Sat, 20 May 2017 11:35:23 -0000' ],
-    seeders: [ '94' ],
-    leechers: [ '47' ],
-    downloads: [ '100' ],
-    infoHash: [ 'c7fae015f2ee9f134cd30783e5f4af4d3a1006a1' ],
-    categoryId: [ '1_2' ],
-    category: [ 'Anime - English-translated' ],
-    size: [ '335.5 MiB' ]
-}
- 
-// For nyaa.pantsu.cat (searchPantsu)
-{ 
-    title: [ '[HorribleSubs] Detective Conan - 860 [720p].mkv' ],
-    link: [ 'magnet:?xt=urn:btih:C7FAE015F2EE9F134CD30783E5F4AF4D3A1006A1&dn=[HorribleSubs] Detective Conan - 860 [720p].mkv&tr=udp://tracker.doko.moe:6969&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://zer0day.to:1337/announce&tr=udp://tracker.leechers-paradise.org:6969&tr=udp://explodie.org:6969&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.internetwarriors.net:1337/announce&tr=http://mgtracker.org:6969/announce&tr=http://tracker.baka-sub.cf/announce' ],
-    description: [ '<h1>[HorribleSubs] Detective Conan - 860 [720p].mkv</h1>\n' ],
-    guid: [ 'https://nyaa.pantsu.cat/view/924369' ],
-    pubDate: [ 'Sat, 20 May 2017 11:36:04 +0000' ] 
-}
-```
+> For a complete documentation, please check out the [wiki](https://github.com/Kylart/Nyaapi/wiki) for a tour of all the methods and how to use them.
