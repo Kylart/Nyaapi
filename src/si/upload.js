@@ -6,7 +6,7 @@ const URI = require('./url.json').url
 /**
  * Allows to upload file or magnet to nyaa.si
  *
- * @param {object} opts
+ * @param {object} opts Object description all the information to upload
  *
  * @returns {promise}
  */
