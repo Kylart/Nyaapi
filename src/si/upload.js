@@ -25,10 +25,6 @@ const upload = (opts) => {
       reject(new Error('[Nyaapi]: The uploaded file must be a .torrent file.'))
     }
 
-    if (!opts.name) {
-      reject(new Error('[Nyaapi]: No name given on upload demand.'))
-    }
-
     if (!opts.category) {
       reject(new Error('[Nyaapi]: No category given on upload demand.'))
     }
