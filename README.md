@@ -30,7 +30,7 @@ This is an api allowing one to:
 * check a user's profile and torrents.
 * So many things you should check the wiki to understand better.
 
-All the documentation there is to know about how to use Nyaapi is located in the [wiki](https://github.com/Kylart/Nyaapi/wiki).
+__All the documentation there is to know about how to use Nyaapi is located in the [wiki](https://github.com/Kylart/Nyaapi/wiki).__
 
 Any contribution is welcomed.
 
