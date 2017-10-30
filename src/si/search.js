@@ -217,12 +217,11 @@ const searchAllByUser = (user = null, term = '', opts = null) => {
       try {
         results = _.concat(results, tmpData)
 
-        tmpData = await searchByUserAndByPage({
-          user,
-          term,
-          p: page,
-          ...opts
-        })
+        opts.user = user
+        opts.term = term
+        opts.p = page
+
+        tmpData = await searchByUserAndByPage(opts)
         ++page
 
         _continue = tmpData.length
@@ -273,12 +272,11 @@ const searchByUser = (user = null, term = '', n = null, opts = {}) => {
 
       while (page <= maxPage) {
         try {
-          tmpData = await searchByUserAndByPage({
-            user,
-            term,
-            p: page,
-            ...opts
-          })
+          opts.user = user
+          opts.term = term
+          opts.p = page
+
+          tmpData = await searchByUserAndByPage(opts)
           results = _.concat(results, tmpData)
           ++page
         } catch (e) {

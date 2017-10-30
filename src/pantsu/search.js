@@ -27,13 +27,13 @@ const search = (term, n = null, opts = {}) => {
       n = opts.n
     }
 
+    opts.c = opts.c || []
+    opts.q = term
+    opts.limit = n || 99999
+    opts = _.omit(opts, 'n')
+
     axios.get(URI + 'search', {
-      params: {
-        c: opts.c || [],
-        q: term,
-        limit: n || 99999,
-        ..._.omit(opts, 'c', 'q', 'n')
-      }
+      params: opts
     })
       .then(({data}) => resolve(data.torrents))
       .catch(/* istanbul ignore next */ (err) => reject(err))

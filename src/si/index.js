@@ -1,7 +1,12 @@
-const search = require('./search.js')
-const upload = require('./upload.js')
+const {search, searchAll, searchAllByUser, searchByUser, searchByUserAndByPage, searchPage} = require('./search.js')
+const {upload} = require('./upload.js')
 
 module.exports = {
-  ...search,
-  ...upload
+  search,
+  searchAll,
+  searchPage,
+  searchByUser,
+  searchAllByUser,
+  searchByUserAndByPage,
+  upload
 }

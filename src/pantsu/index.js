@@ -1,17 +1,18 @@
-const search = require('./search.js')
-const info = require('./info.js')
-const upload = require('./upload.js')
-const update = require('./update.js')
-const login = require('./login')
-const checkUser = require('./checkUser.js')
-const header = require('./header.js')
+const {search, searchAll} = require('./search.js')
+const {infoRequest} = require('./info.js')
+const {upload} = require('./upload.js')
+const {update} = require('./update.js')
+const {login} = require('./login')
+const {checkUser} = require('./checkUser.js')
+const {checkHeader} = require('./header.js')
 
 module.exports = {
-  ...search,
-  ...info,
-  ...upload,
-  ...update,
-  ...login,
-  ...checkUser,
-  ...header
+  search,
+  searchAll,
+  infoRequest,
+  upload,
+  update,
+  login,
+  checkUser,
+  checkHeader
 }
