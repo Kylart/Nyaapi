@@ -226,7 +226,7 @@ test(`SearchAllByUser method returns 38 results with 1 object argument`, async t
 
 test(`SearchAllByUser method returns 1050 results with 1 object argument and no term`, async t => {
   try {
-    const data = await si.searchAllByUser(fansub, '')
+    const data = await si.searchAllByUser(fansub)
 
     t.is(data.length, 1050)
   } catch (e) {

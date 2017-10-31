@@ -194,7 +194,7 @@ const searchByUserAndByPage = (user = null, term = '', p = null, n = null, opts 
  * @returns {promise}
  */
 
-const searchAllByUser = (user = null, term = '', opts = null) => {
+const searchAllByUser = (user = null, term = '', opts = {}) => {
   return new Promise(async (resolve, reject) => {
     if (!user || (typeof user === 'object' && user && !user.user)) {
       reject(new Error('[Nyaapi]: No user was given.'))
