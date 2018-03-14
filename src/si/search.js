@@ -3,6 +3,7 @@ const _ = require('lodash')
 const {extractFromHTML} = require('./scrap.js')
 
 const URI = require('./url.json').url
+const timeout = (time) => new Promise(resolve => setTimeout(resolve, time))
 
 /**
  * Allows to scrap only one specific page of a research.
@@ -14,7 +15,7 @@ const URI = require('./url.json').url
  * @returns {promise}
  */
 
-const searchPage = (term = '', p, opts = {}) => {
+const searchPage = (term = '', p, opts = {}, includeMaxPage) => {
   return new Promise((resolve, reject) => {
     if (!term) reject(new Error('[Nyaapi]: No term was given on search demand.'))
 
@@ -35,7 +36,7 @@ const searchPage = (term = '', p, opts = {}) => {
       }
     })
       .then(({data}) => {
-        const results = extractFromHTML(data)
+        const results = extractFromHTML(data, includeMaxPage)
 
         resolve(results)
       })
@@ -65,28 +66,23 @@ const searchAll = (term = '', opts = {}) => {
       term = opts.term
     }
 
-    let page = 1
-    let results = []
-    let tmpData = []
-    let _continue = true
-
-    while (_continue && page <= 15) {
-      // We stop at page === 15 because nyaa.si offers a maximum of 1000 results
-      // which means 14 pages of 75 results with the last one containing only 25.
-      try {
-        results = _.concat(results, tmpData)
-
-        tmpData = await searchPage(term, page, opts)
-        ++page
-
-        _continue = tmpData.length
-      } catch (e) {
-        /* istanbul ignore next */
-        reject(e)
+    try {
+      const { results: fResults, maxPage } = await searchPage(term, 1, opts, true)
+      const searchs = []
+      for (let page = 2; page <= maxPage; ++page) {
+        const makeSearch = () =>
+          searchPage(term, page, opts)
+            .catch(e => timeout(1000).then(makeSearch))
+        searchs.push(makeSearch())
       }
-    }
 
-    resolve(results)
+      const results = await Promise.all(searchs)
+
+      resolve(results.reduce((c, v) => c.concat(v), fResults))
+    } catch (e) {
+      /* istanbul ignore next */
+      reject(e)
+    }
   })
 }
 
