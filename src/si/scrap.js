@@ -2,7 +2,7 @@ const cheerio = require('cheerio')
 
 const URI = require('./url.json').url
 
-const extractFromHTML = (data) => {
+const extractFromHTML = (data, includeMaxPage = false) => {
   const $ = cheerio.load(data)
   const baseUrl = URI.slice(0, -1)
   const results = []
@@ -40,7 +40,13 @@ const extractFromHTML = (data) => {
     results.push(toPush)
   })
 
-  return results
+  if (includeMaxPage) {
+    return includeMaxPage
+      ? { results, maxPage: +$('ul.pagination li:nth-last-child(2) a').text() }
+      : results
+  } else {
+    return results
+  }
 }
 
 module.exports = {
