@@ -15,13 +15,17 @@ test.before('[Si] methods', () => {
   })
 })
 
+test.beforeEach(async t => {
+  await new Promise(resolve => setTimeout(resolve, 1500))
+})
+
 test(`Search method gives ${number} results with 3 arguments`, async t => {
   try {
     const data = await si.search(anime, number, {filter: 2})
 
     t.is(data.length, number)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -35,7 +39,7 @@ test(`Search method gives ${number} results with 1 object argument`, async t => 
 
     t.is(data.length, number)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -48,7 +52,7 @@ test(`Search method gives 1000 results with no number`, async t => {
 
     t.is(data.length, 1000)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -70,7 +74,7 @@ test('SearchAll method returns a 1000 results with 1 object argument', async t =
 
     t.is(data.length, 1000)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -82,7 +86,7 @@ test('SearchAll method returns a 1000 results with 2 arguments', async t => {
 
     t.is(data.length, 1000)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -116,7 +120,7 @@ test('SearchPage method returns 75 results with 1 object argument', async t => {
 
     t.is(data.length, 75)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -128,7 +132,7 @@ test('SearchPage method returns a 75 results with 3 arguments', async t => {
 
     t.is(data.length, 75)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -158,7 +162,7 @@ test(`SearchByUser method returns ${number} with 4 arguments`, async t => {
 
     t.is(data.length, number)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -173,7 +177,7 @@ test(`SearchByUser method returns ${number} with 1 object argument`, async t => 
 
     t.is(data.length, number)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -206,7 +210,7 @@ test(`SearchAllByUser method returns 38 results with 4 arguments`, async t => {
 
     t.is(data.length, 38)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -220,7 +224,7 @@ test(`SearchAllByUser method returns 38 results with 1 object argument`, async t
 
     t.is(data.length, 38)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -230,7 +234,7 @@ test(`SearchAllByUser method returns 1050 results with 1 object argument and no 
 
     t.is(data.length, 1050)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -267,7 +271,7 @@ test('SearchByUserAndByPage method returns 75 results with 1 object argument', a
 
     t.is(data.length, 75)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 
@@ -279,7 +283,7 @@ test('SearchByUserAndByPage method returns a 75 results with 4 arguments', async
 
     t.is(data.length, 75)
   } catch (e) {
-    t.fail()
+    t.fail(e.message)
   }
 })
 

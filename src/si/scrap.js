@@ -41,6 +41,7 @@ const extractFromHTML = (data, includeMaxPage = false) => {
   })
 
   if (includeMaxPage) {
+    /* istanbul ignore next */
     return includeMaxPage
       ? { results, maxPage: +$('ul.pagination li:nth-last-child(2) a').text() }
       : results
