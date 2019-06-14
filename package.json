@@ -1,6 +1,6 @@
 {
   "name": "nyaapi",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Non-official api for getting torrent links from Nyaa.si and Nyaa.pantsu.cat",
   "main": "src/index.js",
   "scripts": {
@@ -29,14 +29,14 @@
   },
   "homepage": "https://github.com/Kylart/Nyaapi#readme",
   "dependencies": {
-    "axios": "^0.16.1",
-    "cheerio": "^1.0.0-rc.2",
-    "lodash": "^4.17.4",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "axios": "^0.19.0",
+    "cheerio": "^1.0.0-rc.3",
+    "lodash": "^4.17.11",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   },
   "devDependencies": {
-    "ava": "^0.22.0",
+    "ava": "^0.25.0",
     "cloc": "^2.3.2",
     "codecov": "^2.3.1",
     "colors": "^1.1.2",
