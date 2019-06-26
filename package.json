@@ -1,6 +1,6 @@
 {
   "name": "nyaapi",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Non-official api for getting torrent links from Nyaa.si and Nyaa.pantsu.cat",
   "main": "src/index.js",
   "scripts": {
