@@ -33,7 +33,7 @@ const searchPage = (term = '', p, opts = {}, includeMaxPage) => {
         c: opts.category || '1_0',
         q: term,
         p: p,
-        s: opts.sort || 'downloads',
+        s: opts.sort || 'id',
         o: opts.direction || 'desc'
       }
     })
