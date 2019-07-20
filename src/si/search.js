@@ -17,7 +17,10 @@ const timeout = (time) => new Promise(resolve => setTimeout(resolve, time))
 
 const searchPage = (term = '', p, opts = {}, includeMaxPage) => {
   return new Promise((resolve, reject) => {
-    if (!term) reject(new Error('[Nyaapi]: No term was given on search demand.'))
+    if (!term) {
+      reject(new Error('[Nyaapi]: No term was given on search demand.'))
+      return
+    }
 
     if (typeof term === 'object') {
       opts = term
@@ -25,7 +28,10 @@ const searchPage = (term = '', p, opts = {}, includeMaxPage) => {
       p = p || opts.p
     }
 
-    if (!p) reject(new Error('[Nyaapi]: No page number was given on search page demand.'))
+    if (!p) {
+      reject(new Error('[Nyaapi]: No page number was given on search page demand.'))
+      return
+    }
 
     axios.get(URI, {
       params: {

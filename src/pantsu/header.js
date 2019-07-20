@@ -14,6 +14,7 @@ const checkHeader = (id) => {
   return new Promise((resolve, reject) => {
     if (!id) {
       reject(new Error('[Nyaapi]: No ID was given on torrent head request.'))
+      return
     }
 
     axios.head(`${URI}view/${id}`)

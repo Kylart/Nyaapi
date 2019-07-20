@@ -15,6 +15,7 @@ const update = (opts = {}) => {
   return new Promise((resolve, reject) => {
     if (!opts.id || !opts.token) {
       reject(new Error('[Nyaapi]: No ID or Token given on update demand.'))
+      return
     }
 
     req.put({

@@ -15,18 +15,17 @@ const upload = (opts) => {
   return new Promise((resolve, reject) => {
     if (!opts.credentials) {
       reject(new Error('[Nyaapi]: No credentials given on upload demand.'))
+      return
     }
 
     if (!opts.torrent) {
       reject(new Error('[Nyaapi]: No torrent file given on upload demand.'))
-    }
-
-    if (!opts.torrent.slice(-8) !== '.torrent') {
-      reject(new Error('[Nyaapi]: The uploaded file must be a .torrent file.'))
+      return
     }
 
     if (!opts.category) {
       reject(new Error('[Nyaapi]: No category given on upload demand.'))
+      return
     }
 
     request.post({

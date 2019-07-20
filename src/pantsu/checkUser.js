@@ -14,6 +14,7 @@ const checkUser = (id) => {
   return new Promise((resolve, reject) => {
     if (!id) {
       reject(new Error('[Nyaapi]: No ID was given on user check demand.'))
+      return
     }
 
     axios.get(URI + 'profile', {

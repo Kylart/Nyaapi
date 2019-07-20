@@ -14,6 +14,7 @@ const login = (opts = {}) => {
   return new Promise((resolve, reject) => {
     if (!opts.username || !opts.password) {
       reject(new Error('[Nyaapi]: No username or password were given on login demand.'))
+      return
     }
 
     axios({

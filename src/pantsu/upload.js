@@ -23,6 +23,7 @@ const upload = (opts = {}) => {
   return new Promise((resolve, reject) => {
     if ((!opts.magnet && !opts.torrent) || !opts.token || !opts.username) {
       reject(new Error('[Nyaapi]: No file/torrent, token or username were given.'))
+      return
     }
 
     if (opts.torrent) {
