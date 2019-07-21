@@ -1,5 +1,4 @@
 const request = require('request-promise')
-const _ = require('lodash')
 const { extractFromHTML } = require('./scrap.js')
 
 const URI = require('./url.json').url
@@ -119,7 +118,7 @@ const search = async (term = '', n = null, opts = {}) => {
 
     while (page <= maxPage) {
       tmpData = await searchPage(term, page, opts)
-      results = _.concat(results, tmpData)
+      results = results.concat(tmpData)
       ++page
     }
 
@@ -196,7 +195,7 @@ const searchAllByUser = async (user = null, term = '', opts = {}) => {
 
   while (_continue && page <= 15) {
     // We stop at page === 15 because nyaa.si offers a maximum of 1000 results on standard research
-    results = _.concat(results, tmpData)
+    results = results.concat(tmpData)
 
     opts.user = user
     opts.term = term
@@ -250,7 +249,7 @@ const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
       opts.p = page
 
       tmpData = await searchByUserAndByPage(opts)
-      results = _.concat(results, tmpData)
+      results = results.concat(tmpData)
       ++page
     }
 

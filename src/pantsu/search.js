@@ -1,5 +1,5 @@
 const request = require('request-promise')
-const _ = require('lodash')
+const omit = require('lodash.omit')
 
 const URI = require('./url.json').url
 
@@ -30,7 +30,7 @@ const search = (term, n = null, opts = {}) => {
     opts.c = opts.c || []
     opts.q = term
     opts.limit = n || 99999
-    opts = _.omit(opts, 'n')
+    opts = omit(opts, 'n')
 
     request.get(URI + 'search', {
       qs: opts
@@ -69,7 +69,7 @@ const searchAll = async (term, opts = {}) => {
     // We stop at 900 results, that should be enough
     torrents = await search(term, null, opts)
     ++opts.page
-    results = _.concat(results, torrents)
+    results = results.concat(torrents)
 
     _continue = torrents.length
   }

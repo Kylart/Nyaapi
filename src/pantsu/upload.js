@@ -7,7 +7,7 @@
 
 const fs = require('fs')
 const req = require('request-promise')
-const _ = require('lodash')
+const omit = require('lodash.omit')
 
 const URI = require('./url.json').url
 
@@ -35,7 +35,7 @@ const upload = (opts = {}) => {
       headers: {
         Authorization: opts.token
       },
-      formData: _.omit(opts, 'token')
+      formData: omit(opts, 'token')
     })
       .then((data) => resolve(data))
       .catch((err) => reject(err))
