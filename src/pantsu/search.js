@@ -1,4 +1,4 @@
-const axios = require('axios')
+const request = require('request-promise')
 const _ = require('lodash')
 
 const URI = require('./url.json').url
@@ -32,10 +32,10 @@ const search = (term, n = null, opts = {}) => {
     opts.limit = n || 99999
     opts = _.omit(opts, 'n')
 
-    axios.get(URI + 'search', {
-      params: opts
+    request.get(URI + 'search', {
+      qs: opts
     })
-      .then(({data}) => resolve(data.torrents))
+      .then((data) => resolve(JSON.parse(data).torrents))
       .catch(/* istanbul ignore next */ (err) => reject(err))
   })
 }

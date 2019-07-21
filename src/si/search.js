@@ -1,4 +1,4 @@
-const axios = require('axios')
+const request = require('request-promise')
 const _ = require('lodash')
 const {extractFromHTML} = require('./scrap.js')
 
@@ -33,8 +33,8 @@ const searchPage = (term = '', p, opts = {}, includeMaxPage) => {
       return
     }
 
-    axios.get(URI, {
-      params: {
+    request.get(URI, {
+      qs: {
         f: opts.filter || 0,
         c: opts.category || '1_0',
         q: term,
@@ -43,7 +43,7 @@ const searchPage = (term = '', p, opts = {}, includeMaxPage) => {
         o: opts.direction || 'desc'
       }
     })
-      .then(({data}) => {
+      .then((data) => {
         const results = extractFromHTML(data, includeMaxPage)
 
         resolve(results)
@@ -170,15 +170,15 @@ const searchByUserAndByPage = (user = null, term = '', p = null, n = null, opts 
 
     if (!p) reject(new Error('[Nyaapi]: No page given on search by page demand.'))
 
-    axios.get(`${URI}user/${user}`, {
-      params: {
+    request.get(`${URI}user/${user}`, {
+      qs: {
         f: opts.filter || 0,
         c: opts.category || '1_0',
         q: term || '',
         p
       }
     })
-      .then(({data}) => {
+      .then((data) => {
         const results = extractFromHTML(data)
 
         resolve(results.slice(0, n || results.length))

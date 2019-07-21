@@ -1,4 +1,4 @@
-const axios = require('axios')
+const request = require('request-promise')
 
 const URI = require('./url.json').url
 
@@ -17,8 +17,8 @@ const infoRequest = (id) => {
       return
     }
 
-    axios.get(`${URI}view/${id}`)
-      .then(({data}) => resolve(data))
+    request.get(`${URI}view/${id}`)
+      .then((data) => resolve(JSON.parse(data)))
       .catch(/* istanbul ignore next */ (err) => reject(err))
   })
 }

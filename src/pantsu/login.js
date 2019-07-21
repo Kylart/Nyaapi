@@ -1,4 +1,4 @@
-const axios = require('axios')
+const request = require('request-promise')
 
 const URI = require('./url.json').url
 
@@ -17,15 +17,13 @@ const login = (opts = {}) => {
       return
     }
 
-    axios({
-      method: 'post',
-      url: URI + 'login',
-      data: {
+    request.post(URI + 'login', {
+      json: {
         username: opts.username,
         password: opts.password
       }
     })
-      .then(({data}) => resolve(data))
+      .then((data) => resolve(JSON.parse(data)))
       .catch((err) => reject(err))
   })
 }
