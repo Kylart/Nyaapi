@@ -33,7 +33,7 @@ const upload = (opts = {}) => {
     req.post({
       url: `${URI}upload`,
       headers: {
-        'Authorization': opts.token
+        Authorization: opts.token
       },
       formData: _.omit(opts, 'token')
     })

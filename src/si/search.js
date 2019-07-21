@@ -1,6 +1,6 @@
 const request = require('request-promise')
 const _ = require('lodash')
-const {extractFromHTML} = require('./scrap.js')
+const { extractFromHTML } = require('./scrap.js')
 
 const URI = require('./url.json').url
 const timeout = (time) => new Promise(resolve => setTimeout(resolve, time))
@@ -62,36 +62,28 @@ const searchPage = (term = '', p, opts = {}, includeMaxPage) => {
  * @returns {promise}
  */
 
-const searchAll = (term = '', opts = {}) => {
-  return new Promise(async (resolve, reject) => {
-    if (!term || (typeof term === 'object' && !term.term)) {
-      reject(new Error('[Nyaapi]: No search term was given.'))
-      return
-    }
+const searchAll = async (term = '', opts = {}) => {
+  if (!term || (typeof term === 'object' && !term.term)) {
+    throw new Error('[Nyaapi]: No search term was given.')
+  }
 
-    if (typeof term === 'object') {
-      opts = term
-      term = opts.term
-    }
+  if (typeof term === 'object') {
+    opts = term
+    term = opts.term
+  }
 
-    try {
-      const { results: fResults, maxPage } = await searchPage(term, 1, opts, true)
-      const searchs = []
-      for (let page = 2; page <= maxPage; ++page) {
-        const makeSearch = () =>
-          searchPage(term, page, opts)
-            .catch(e => timeout(1000).then(makeSearch))
-        searchs.push(makeSearch())
-      }
+  const { results: fResults, maxPage } = await searchPage(term, 1, opts, true)
+  const searchs = []
+  for (let page = 2; page <= maxPage; ++page) {
+    const makeSearch = () =>
+      searchPage(term, page, opts)
+        .catch(e => timeout(1000).then(makeSearch))
+    searchs.push(makeSearch())
+  }
 
-      const results = await Promise.all(searchs)
+  const results = await Promise.all(searchs)
 
-      resolve(results.reduce((c, v) => c.concat(v), fResults))
-    } catch (e) {
-      /* istanbul ignore next */
-      reject(e)
-    }
-  })
+  return results.reduce((c, v) => c.concat(v), fResults)
 }
 
 /**
@@ -105,42 +97,34 @@ const searchAll = (term = '', opts = {}) => {
  * @returns {promise}
  */
 
-const search = (term = '', n = null, opts = {}) => {
-  return new Promise(async (resolve, reject) => {
-    if (!term || (typeof term === 'object' && !term.term)) {
-      reject(new Error('[Nyaapi]: No term given on search demand.'))
-      return
+const search = async (term = '', n = null, opts = {}) => {
+  if (!term || (typeof term === 'object' && !term.term)) {
+    throw new Error('[Nyaapi]: No term given on search demand.')
+  }
+
+  if (typeof term === 'object') {
+    opts = term
+    term = opts.term
+    n = n || opts.n
+  }
+
+  // If there is no n, then the user's asking for all the results, right?
+  if (!n) {
+    return searchAll(term, opts)
+  } else {
+    let results = []
+    let tmpData = []
+    let page = 1
+    const maxPage = Math.ceil(n / 75)
+
+    while (page <= maxPage) {
+      tmpData = await searchPage(term, page, opts)
+      results = _.concat(results, tmpData)
+      ++page
     }
 
-    if (typeof term === 'object') {
-      opts = term
-      term = opts.term
-      n = n || opts.n
-    }
-
-    // If there is no n, then the user's asking for all the results, right?
-    if (!n) {
-      resolve(searchAll(term, opts))
-    } else {
-      let results = []
-      let tmpData = []
-      let page = 1
-      const maxPage = Math.ceil(n / 75)
-
-      while (page <= maxPage) {
-        try {
-          tmpData = await searchPage(term, page, opts)
-          results = _.concat(results, tmpData)
-          ++page
-        } catch (e) {
-          /* istanbul ignore next */
-          reject(e)
-        }
-      }
-
-      resolve(results.slice(0, n))
-    }
-  })
+    return results.slice(0, n)
+  }
 }
 
 /**
@@ -156,35 +140,31 @@ const search = (term = '', n = null, opts = {}) => {
  * @returns {promise}
  */
 
-const searchByUserAndByPage = (user = null, term = '', p = null, n = null, opts = {}) => {
-  return new Promise((resolve, reject) => {
-    if (!user) reject(new Error('[Nyaapi]: No user given on search demand.'))
+const searchByUserAndByPage = async (user = null, term = '', p = null, n = null, opts = {}) => {
+  if (!user) throw new Error('[Nyaapi]: No user given on search demand.')
 
-    if (typeof user === 'object') {
-      opts = user
-      user = opts.user
-      p = opts.p
-      term = term || opts.term
-      n = n || opts.n || 75
+  if (typeof user === 'object') {
+    opts = user
+    user = opts.user
+    p = opts.p
+    term = term || opts.term
+    n = n || opts.n || 75
+  }
+
+  if (!p) throw new Error('[Nyaapi]: No page given on search by page demand.')
+
+  const data = await request.get(`${URI}user/${user}`, {
+    qs: {
+      f: opts.filter || 0,
+      c: opts.category || '1_0',
+      q: term || '',
+      p
     }
-
-    if (!p) reject(new Error('[Nyaapi]: No page given on search by page demand.'))
-
-    request.get(`${URI}user/${user}`, {
-      qs: {
-        f: opts.filter || 0,
-        c: opts.category || '1_0',
-        q: term || '',
-        p
-      }
-    })
-      .then((data) => {
-        const results = extractFromHTML(data)
-
-        resolve(results.slice(0, n || results.length))
-      })
-      .catch(/* istanbul ignore next */ (err) => reject(err))
   })
+
+  const results = extractFromHTML(data)
+
+  return results.slice(0, n || results.length)
 }
 
 /**
@@ -198,45 +178,37 @@ const searchByUserAndByPage = (user = null, term = '', p = null, n = null, opts 
  * @returns {promise}
  */
 
-const searchAllByUser = (user = null, term = '', opts = {}) => {
-  return new Promise(async (resolve, reject) => {
-    if (!user || (typeof user === 'object' && user && !user.user)) {
-      reject(new Error('[Nyaapi]: No user was given.'))
-      return
-    }
+const searchAllByUser = async (user = null, term = '', opts = {}) => {
+  if (!user || (typeof user === 'object' && user && !user.user)) {
+    throw new Error('[Nyaapi]: No user was given.')
+  }
 
-    if (typeof user === 'object') {
-      opts = user
-      term = opts.term
-      user = opts.user
-    }
+  if (typeof user === 'object') {
+    opts = user
+    term = opts.term
+    user = opts.user
+  }
 
-    let page = 1
-    let results = []
-    let tmpData = []
-    let _continue = true
+  let page = 1
+  let results = []
+  let tmpData = []
+  let _continue = true
 
-    while (_continue && page <= 15) {
-      // We stop at page === 15 because nyaa.si offers a maximum of 1000 results on standard research
-      try {
-        results = _.concat(results, tmpData)
+  while (_continue && page <= 15) {
+    // We stop at page === 15 because nyaa.si offers a maximum of 1000 results on standard research
+    results = _.concat(results, tmpData)
 
-        opts.user = user
-        opts.term = term
-        opts.p = page
+    opts.user = user
+    opts.term = term
+    opts.p = page
 
-        tmpData = await searchByUserAndByPage(opts)
-        ++page
+    tmpData = await searchByUserAndByPage(opts)
+    ++page
 
-        _continue = tmpData.length
-      } catch (e) {
-        /* istanbul ignore next */
-        reject(e)
-      }
-    }
+    _continue = tmpData.length
+  }
 
-    resolve(results)
-  })
+  return results
 }
 
 /**
@@ -251,47 +223,39 @@ const searchAllByUser = (user = null, term = '', opts = {}) => {
  * @returns {promise}
  */
 
-const searchByUser = (user = null, term = '', n = null, opts = {}) => {
-  return new Promise(async (resolve, reject) => {
-    if (!user || (typeof user === 'object' && user && !user.user)) {
-      reject(new Error('[Nyaapi]: No user given on search demand.'))
-      return
+const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
+  if (!user || (typeof user === 'object' && user && !user.user)) {
+    throw new Error('[Nyaapi]: No user given on search demand.')
+  }
+
+  if (typeof user === 'object') {
+    opts = user
+    user = opts.user
+    term = term || opts.term || ''
+    n = n || opts.n
+  }
+
+  // If there is no n, then the user's asking for all the results, right?
+  if (!n) {
+    return searchAllByUser(user, term, opts)
+  } else {
+    let results = []
+    let tmpData = []
+    let page = 1
+    const maxPage = Math.ceil(n / 75)
+
+    while (page <= maxPage) {
+      opts.user = user
+      opts.term = term
+      opts.p = page
+
+      tmpData = await searchByUserAndByPage(opts)
+      results = _.concat(results, tmpData)
+      ++page
     }
 
-    if (typeof user === 'object') {
-      opts = user
-      user = opts.user
-      term = term || opts.term || ''
-      n = n || opts.n
-    }
-
-    // If there is no n, then the user's asking for all the results, right?
-    if (!n) {
-      resolve(searchAllByUser(user, term, opts))
-    } else {
-      let results = []
-      let tmpData = []
-      let page = 1
-      const maxPage = Math.ceil(n / 75)
-
-      while (page <= maxPage) {
-        try {
-          opts.user = user
-          opts.term = term
-          opts.p = page
-
-          tmpData = await searchByUserAndByPage(opts)
-          results = _.concat(results, tmpData)
-          ++page
-        } catch (e) {
-          /* istanbul ignore next */
-          reject(e)
-        }
-      }
-
-      resolve(results.slice(0, n))
-    }
-  })
+    return results.slice(0, n)
+  }
 }
 
 module.exports = {

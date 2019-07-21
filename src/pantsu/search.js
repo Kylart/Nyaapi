@@ -50,39 +50,31 @@ const search = (term, n = null, opts = {}) => {
  * @returns {promise}
  */
 
-const searchAll = (term, opts = {}) => {
-  return new Promise(async (resolve, reject) => {
-    if (!term || (typeof term === 'object' && !term.term)) {
-      reject(new Error('[Nyaapi]: No term given on search demand.'))
-      return
-    }
+const searchAll = async (term, opts = {}) => {
+  if (!term || (typeof term === 'object' && !term.term)) {
+    throw new Error('[Nyaapi]: No term given on search demand.')
+  }
 
-    if (typeof term === 'object') {
-      opts = term
-      term = opts.term
-    }
+  if (typeof term === 'object') {
+    opts = term
+    term = opts.term
+  }
 
-    let results = []
-    let torrents = []
-    opts.page = 1
-    let _continue = true
+  let results = []
+  let torrents = []
+  opts.page = 1
+  let _continue = true
 
-    try {
-      while (_continue && opts.page < 4) {
-        // We stop at 900 results, that should be enough
-        torrents = await search(term, null, opts)
-        ++opts.page
-        results = _.concat(results, torrents)
+  while (_continue && opts.page < 4) {
+    // We stop at 900 results, that should be enough
+    torrents = await search(term, null, opts)
+    ++opts.page
+    results = _.concat(results, torrents)
 
-        _continue = torrents.length
-      }
+    _continue = torrents.length
+  }
 
-      resolve(results)
-    } catch (e) {
-      /* istanbul ignore next */
-      reject(e)
-    }
-  })
+  return results
 }
 
 module.exports = {

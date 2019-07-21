@@ -1,5 +1,5 @@
 const request = require('request-promise')
-const {createReadStream} = require('fs')
+const { createReadStream } = require('fs')
 
 const URI = require('./url.json').url
 

@@ -21,7 +21,7 @@ const update = (opts = {}) => {
     req.put({
       url: `${URI}update`,
       headers: {
-        'Authorization': opts.token
+        Authorization: opts.token
       },
       formData: _.omit(opts, 'token')
     })

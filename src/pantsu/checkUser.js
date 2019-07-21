@@ -18,7 +18,7 @@ const checkUser = (id) => {
     }
 
     request.get(URI + 'profile', {
-      qs: {id}
+      qs: { id }
     })
       .then((data) => resolve(JSON.parse(data)))
       .catch(/* istanbul ignore next */ (err) => reject(err))
