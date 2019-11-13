@@ -204,17 +204,17 @@ test('SearchByUser method returns an error is no user is given', async t => {
   }
 })
 
-test(`SearchAllByUser method returns 38 results with 4 arguments`, async t => {
+test(`SearchAllByUser method returns 41 results with 4 arguments`, async t => {
   try {
     const data = await si.searchAllByUser(fansub, anime, {filter: 2})
 
-    t.is(data.length, 38)
+    t.is(data.length, 41)
   } catch (e) {
     t.fail(e.message)
   }
 })
 
-test(`SearchAllByUser method returns 38 results with 1 object argument`, async t => {
+test(`SearchAllByUser method returns 41 results with 1 object argument`, async t => {
   try {
     const data = await si.searchAllByUser({
       user: fansub,
@@ -222,7 +222,7 @@ test(`SearchAllByUser method returns 38 results with 1 object argument`, async t
       filter: 2
     })
 
-    t.is(data.length, 38)
+    t.is(data.length, 41)
   } catch (e) {
     t.fail(e.message)
   }

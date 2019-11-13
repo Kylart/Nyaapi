@@ -11,5 +11,12 @@ script:
   - npm run cloc
 after_success: npm run coverage
 
+deploy:
+  provider: npm
+  email: kylart.dev@gmail.com
+  api_key: $NPM_TOKEN
+  on:
+    branch: master
+
 notifications:
   email: false
