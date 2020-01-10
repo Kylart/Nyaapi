@@ -17,8 +17,8 @@ const checkHeader = (id) => {
       return
     }
 
-    request.head(`${URI}view/${id}`)
-      .then((data) => resolve(JSON.parse(data)))
+    request.get(`${URI}view/${id}`)
+      .on('response', (response) => resolve(response.statusMessage))
       .catch((err) => reject(err))
   })
 }
