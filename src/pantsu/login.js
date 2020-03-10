@@ -5,25 +5,24 @@ const URI = require('./url.json').url
 /**
  * Allows to log into nyaa.pantsu.cat
  *
- * @param {Object} opts Object containing a username aong with its password.
+ * @param {Object} credentials Object containing a username aong with its password.
+ * @param {String} credentials.username Your username
+ * @param {String} credentials.password Your password
  *
  * @returns {promise}
  */
 
-const login = (opts = {}) => {
+const login = (credentials = {}) => {
   return new Promise((resolve, reject) => {
-    if (!opts.username || !opts.password) {
+    if (!credentials.username || !credentials.password) {
       reject(new Error('[Nyaapi]: No username or password were given on login demand.'))
       return
     }
 
     request.post(URI + 'login', {
-      json: {
-        username: opts.username,
-        password: opts.password
-      }
+      json: credentials
     })
-      .then((data) => resolve(JSON.parse(data)))
+      .then((data) => resolve(data))
       .catch((err) => reject(err))
   })
 }
