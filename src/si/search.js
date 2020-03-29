@@ -113,13 +113,15 @@ const search = async (term = '', n = null, opts = {}) => {
   } else {
     let results = []
     let tmpData = []
+    let _continue = true
     let page = 1
     const maxPage = Math.ceil(n / 75)
 
-    while (page <= maxPage) {
+    while (_continue && page <= maxPage) {
       tmpData = await searchPage(term, page, opts)
       results = results.concat(tmpData)
       ++page
+      _continue = tmpData.length
     }
 
     return results.slice(0, n)
@@ -241,9 +243,10 @@ const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
     let results = []
     let tmpData = []
     let page = 1
+    let _continue = true
     const maxPage = Math.ceil(n / 75)
 
-    while (page <= maxPage) {
+    while (_continue && page <= maxPage) {
       opts.user = user
       opts.term = term
       opts.p = page
@@ -251,6 +254,7 @@ const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
       tmpData = await searchByUserAndByPage(opts)
       results = results.concat(tmpData)
       ++page
+      _continue = tmpData.length
     }
 
     return results.slice(0, n)
