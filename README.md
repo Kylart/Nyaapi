@@ -60,6 +60,7 @@ console.log(si)
 console.log(pantsu)
 /**
  * [Pantsu] methods:
+ *   > list
  *   > search
  *   > searchAll
  *   > infoRequest
