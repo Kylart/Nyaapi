@@ -261,7 +261,43 @@ const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
   }
 }
 
+/**
+ * List specific category on nyaa.si.
+ *
+ * @param {string} c    Category to list.
+ * @param {number} p    Page of the category.
+ * @param {object} opts Research options as described on the documentation.
+ *
+ * @returns {promise}
+ */
+
+const list = (c, p = 1, opts = {}) => {
+  return new Promise((resolve, reject) => {
+    if (typeof c === 'object') {
+      opts = c
+      c = opts.c
+      p = p || opts.p
+    }
+
+    request.get(URI, {
+      qs: {
+        f: opts.filter || 0,
+        c: c || '1_0',
+        p: p,
+        s: opts.sort || 'id',
+        o: opts.direction || 'desc'
+      }
+    })
+      .then((data) => {
+        const results = extractFromHTML(data, true)
+        resolve(results)
+      })
+      .catch(/* istanbul ignore next */ (err) => reject(err))
+  })
+}
+
 module.exports = {
+  list,
   search,
   searchAll,
   searchPage,

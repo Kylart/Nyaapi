@@ -48,6 +48,7 @@ const {si, pantsu} = require('nyaapi')
 console.log(si)
 /**
  * [Si] methods:
+ *   > list
  *   > search
  *   > searchAll
  *   > searchPage
