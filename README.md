@@ -55,6 +55,7 @@ console.log(si)
  *   > searchByUser
  *   > searchAllByUser
  *   > searchByUserAndByPage
+ *   > infoRequest
  *   > upload
  * 
  */
