@@ -1,4 +1,4 @@
-const { search, searchAll } = require('./search.js')
+const { list, search, searchAll } = require('./search.js')
 const { infoRequest } = require('./info.js')
 const { upload } = require('./upload.js')
 const { update } = require('./update.js')
@@ -7,6 +7,7 @@ const { checkUser } = require('./checkUser.js')
 const { checkHeader } = require('./header.js')
 
 module.exports = {
+  list,
   search,
   searchAll,
   infoRequest,

@@ -77,7 +77,39 @@ const searchAll = async (term, opts = {}) => {
   return results
 }
 
+/**
+ *
+ * List specific category on nyaa.pantsu.cat
+ *
+ * @param {string} c    Category to list.
+ * @param {number} p    Page of the category.
+ * @param {Object} opts Research options as described on the official documentation (optional).
+ *
+ * @returns {promise}
+ */
+
+const list = (c, p = 1, opts = {}) => {
+  return new Promise((resolve, reject) => {
+    if (typeof c === 'object') {
+      opts = c
+      c = opts.c
+    }
+
+    opts.c = c || []
+    opts.page = p || 1
+    opts.limit = opts.n || 100
+    opts = omit(opts, 'n')
+
+    request.get(URI + 'search', {
+      qs: opts
+    })
+      .then((data) => resolve(JSON.parse(data).torrents))
+      .catch(/* istanbul ignore next */ (err) => reject(err))
+  })
+}
+
 module.exports = {
+  list,
   search,
   searchAll
 }
