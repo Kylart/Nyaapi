@@ -271,7 +271,7 @@ const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
  * @returns {promise}
  */
 
-const list = (c, p = 1, opts = {}) => {
+const list = (c, p, opts = {}) => {
   return new Promise((resolve, reject) => {
     if (typeof c === 'object') {
       opts = c
@@ -283,7 +283,7 @@ const list = (c, p = 1, opts = {}) => {
       qs: {
         f: opts.filter || 0,
         c: c || '1_0',
-        p: p,
+        p: p || 1,
         s: opts.sort || 'id',
         o: opts.direction || 'desc'
       }
