@@ -12,32 +12,22 @@ const extractFromHTML = (data, includeMaxPage = false) => {
   }
 
   $('tr').slice(1).each(function () {
-    const toPush = {}
-
-    // Scraping category
-    toPush.category = {
-      label: _getChild(this, 1).find('a').attr('title'),
-      code: _getChild(this, 1).find('a').attr('href').replace('/?c=', '')
+    const result = {
+      id: _getChild(this, 2).find('a:not(.comments)').attr('href').replace('/view/', ''),
+      name: _getChild(this, 2).find('a:not(.comments)').text().trim(),
+      hash: _getChild(this, 3).find('a:nth-child(2)').attr('href').match(/btih:(\w+)/)[1],
+      date: new Date(_getChild(this, 5).attr('data-timestamp') * 1000).toISOString(),
+      filesize: _getChild(this, 4).text(),
+      category: _getChild(this, 1).find('a').attr('href').replace('/?c=', '').replace(/\d{1,2}$/, '0'),
+      sub_category: _getChild(this, 1).find('a').attr('href').replace('/?c=', ''),
+      magnet: _getChild(this, 3).find('a:nth-child(2)').attr('href'),
+      torrent: baseUrl + _getChild(this, 3).find('a:nth-child(1)').attr('href'),
+      seeders: _getChild(this, 6).text(),
+      leechers: _getChild(this, 7).text(),
+      completed: _getChild(this, 8).text()
     }
 
-    // Scraping names
-    toPush.name = _getChild(this, 2).find('a:not(.comments)').text().trim()
-
-    // Scraping links for torrent and magnet
-    toPush.links = {
-      page: baseUrl + _getChild(this, 2).find('a:not(.comments)').attr('href'),
-      file: baseUrl + _getChild(this, 3).find('a:nth-child(1)').attr('href'),
-      magnet: _getChild(this, 3).find('a:nth-child(2)').attr('href')
-    }
-
-    // Scraping some other info
-    toPush.fileSize = _getChild(this, 4).text()
-    toPush.timestamp = _getChild(this, 5).attr('data-timestamp')
-    toPush.seeders = _getChild(this, 6).text()
-    toPush.leechers = _getChild(this, 7).text()
-    toPush.nbDownload = _getChild(this, 8).text()
-
-    results.push(toPush)
+    results.push(result)
   })
 
   if (includeMaxPage) {
