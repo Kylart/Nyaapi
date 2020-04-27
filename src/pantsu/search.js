@@ -88,11 +88,12 @@ const searchAll = async (term, opts = {}) => {
  * @returns {promise}
  */
 
-const list = (c, p = 1, opts = {}) => {
+const list = (c, p, opts = {}) => {
   return new Promise((resolve, reject) => {
     if (typeof c === 'object') {
       opts = c
       c = opts.c
+      p = p || opts.p
     }
 
     opts.c = c || []
