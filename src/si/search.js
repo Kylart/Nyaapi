@@ -193,9 +193,8 @@ const searchAllByUser = async (user = null, term = '', opts = {}) => {
   let page = 1
   let results = []
   let tmpData = []
-  let _continue = true
 
-  while (_continue && page <= 15) {
+  while (page <= 15) {
     // We stop at page === 15 because nyaa.si offers a maximum of 1000 results on standard research
     results = results.concat(tmpData)
 
@@ -203,10 +202,14 @@ const searchAllByUser = async (user = null, term = '', opts = {}) => {
     opts.term = term
     opts.p = page
 
-    tmpData = await searchByUserAndByPage(opts)
-    ++page
+    try {
+      tmpData = await searchByUserAndByPage(opts)
+      ++page
+    } catch (e) {
+      if (e.statusCode !== 404) throw e
 
-    _continue = tmpData.length
+      break
+    }
   }
 
   return results
