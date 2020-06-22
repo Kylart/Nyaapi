@@ -24,7 +24,8 @@ const extractFromHTML = (data, includeMaxPage = false) => {
       torrent: baseUrl + _getChild(this, 3).find('a:nth-child(1)').attr('href'),
       seeders: _getChild(this, 6).text(),
       leechers: _getChild(this, 7).text(),
-      completed: _getChild(this, 8).text()
+      completed: _getChild(this, 8).text(),
+      status: $(this).attr('class')
     }
 
     results.push(result)
