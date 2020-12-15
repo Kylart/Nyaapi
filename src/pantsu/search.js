@@ -1,7 +1,7 @@
 const request = require('request-promise')
 const omit = require('lodash.omit')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 /**
  *
@@ -32,7 +32,7 @@ const search = (term, n = null, opts = {}) => {
     opts.limit = n || 99999
     opts = omit(opts, 'n')
 
-    request.get(URI + 'search', {
+    request.get(config.url + 'search', {
       qs: opts
     })
       .then((data) => resolve(JSON.parse(data).torrents))
@@ -101,7 +101,7 @@ const list = (c, p, opts = {}) => {
     opts.limit = opts.n || 100
     opts = omit(opts, 'n')
 
-    request.get(URI + 'search', {
+    request.get(config.url + 'search', {
       qs: opts
     })
       .then((data) => resolve(JSON.parse(data).torrents))

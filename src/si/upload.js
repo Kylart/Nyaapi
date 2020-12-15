@@ -1,7 +1,7 @@
 const request = require('request-promise')
 const { createReadStream } = require('fs')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 /**
  * Allows to upload file or magnet to nyaa.si
@@ -29,7 +29,7 @@ const upload = (opts) => {
     }
 
     request.post({
-      url: URI + 'api/upload',
+      url: config.url + 'api/upload',
       auth: opts.credentials,
       formData: {
         torrent: createReadStream(opts.torrent),

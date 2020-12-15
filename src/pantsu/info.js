@@ -1,6 +1,6 @@
 const request = require('request-promise')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 /**
  * Request torrent information according to its ID.
@@ -17,7 +17,7 @@ const infoRequest = (id) => {
       return
     }
 
-    request.get(`${URI}view/${id}`)
+    request.get(`${config.url}view/${id}`)
       .then((data) => resolve(JSON.parse(data)))
       .catch(/* istanbul ignore next */ (err) => reject(err))
   })

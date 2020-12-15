@@ -1,7 +1,7 @@
 const req = require('request-promise')
 const omit = require('lodash.omit')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 /**
  * Allows the updating of a torrent.
@@ -19,7 +19,7 @@ const update = (opts = {}) => {
     }
 
     req.put({
-      url: `${URI}update`,
+      url: `${config.url}update`,
       headers: {
         Authorization: opts.token
       },

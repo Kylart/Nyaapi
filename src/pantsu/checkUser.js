@@ -1,6 +1,6 @@
 const request = require('request-promise')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 /**
  * Allows to check a user profile from its ID.
@@ -17,7 +17,7 @@ const checkUser = (id) => {
       return
     }
 
-    request.get(URI + 'profile', {
+    request.get(config.url + 'profile', {
       qs: { id }
     })
       .then((data) => resolve(JSON.parse(data)))

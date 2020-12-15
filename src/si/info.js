@@ -1,7 +1,7 @@
 const request = require('request-promise')
 const { extractPageFromHTML } = require('./scrap.js')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 /**
  * Request torrent information according to its ID.
@@ -18,7 +18,7 @@ const infoRequest = (id) => {
       return
     }
 
-    request.get(`${URI}view/${id}`)
+    request.get(`${config.url}view/${id}`)
       .then((data) => resolve(extractPageFromHTML(data)))
       .then((info) => ({ id, ...info }))
       .catch(/* istanbul ignore next */ (err) => reject(err))

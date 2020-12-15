@@ -1,6 +1,6 @@
 const request = require('request-promise')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 /**
  * Allows to log into nyaa.pantsu.cat
@@ -19,7 +19,7 @@ const login = (credentials = {}) => {
       return
     }
 
-    request.post(URI + 'login', {
+    request.post(config.url + 'login', {
       json: credentials
     })
       .then((data) => resolve(data))

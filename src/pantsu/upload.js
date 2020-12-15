@@ -9,7 +9,7 @@ const fs = require('fs')
 const req = require('request-promise')
 const omit = require('lodash.omit')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 /**
  * Allows the uploading of torrent file to nyaa.pantsu.cat
@@ -31,7 +31,7 @@ const upload = (opts = {}) => {
     }
 
     req.post({
-      url: `${URI}upload`,
+      url: `${config.url}upload`,
       headers: {
         Authorization: opts.token
       },

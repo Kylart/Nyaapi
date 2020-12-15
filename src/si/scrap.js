@@ -1,10 +1,10 @@
 const cheerio = require('cheerio')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 const extractFromHTML = (data, includeMaxPage = false) => {
   const $ = cheerio.load(data)
-  const baseUrl = URI.slice(0, -1)
+  const baseUrl = config.url.slice(0, -1)
   const results = []
 
   const _getChild = (ctx, nb) => {
@@ -43,7 +43,7 @@ const extractFromHTML = (data, includeMaxPage = false) => {
 
 const extractPageFromHTML = (data) => {
   const $ = cheerio.load(data)
-  const baseUrl = URI.slice(0, -1)
+  const baseUrl = config.url.slice(0, -1)
 
   return {
     name: $('.panel-heading > .panel-title').eq(0).text().trim(),

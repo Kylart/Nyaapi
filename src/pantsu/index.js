@@ -5,6 +5,7 @@ const { update } = require('./update.js')
 const { login } = require('./login')
 const { checkUser } = require('./checkUser.js')
 const { checkHeader } = require('./header.js')
+const { config } = require('./config.js')
 
 module.exports = {
   list,
@@ -15,5 +16,6 @@ module.exports = {
   update,
   login,
   checkUser,
-  checkHeader
+  checkHeader,
+  config
 }

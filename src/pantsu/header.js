@@ -1,6 +1,6 @@
 const request = require('request-promise')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 
 /**
  * Allows to request torrent's head its ID.
@@ -17,7 +17,7 @@ const checkHeader = (id) => {
       return
     }
 
-    request.get(`${URI}view/${id}`)
+    request.get(`${config.url}view/${id}`)
       .on('response', (response) => resolve(response.statusMessage))
       .catch((err) => reject(err))
   })

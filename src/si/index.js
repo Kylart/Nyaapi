@@ -1,6 +1,7 @@
 const { list, search, searchAll, searchAllByUser, searchByUser, searchByUserAndByPage, searchPage } = require('./search.js')
 const { infoRequest } = require('./info.js')
 const { upload } = require('./upload.js')
+const { config } = require('./config.js')
 
 module.exports = {
   list,
@@ -11,5 +12,6 @@ module.exports = {
   searchAllByUser,
   searchByUserAndByPage,
   infoRequest,
-  upload
+  upload,
+  config
 }

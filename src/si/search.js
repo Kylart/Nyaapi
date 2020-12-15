@@ -1,7 +1,7 @@
 const request = require('request-promise')
 const { extractFromHTML } = require('./scrap.js')
 
-const URI = require('./url.json').url
+const { config } = require('./config.js')
 const timeout = (time) => new Promise(resolve => setTimeout(resolve, time))
 
 /**
@@ -32,7 +32,7 @@ const searchPage = (term = '', p, opts = {}, includeMaxPage) => {
       return
     }
 
-    request.get(URI, {
+    request.get(config.url, {
       qs: {
         f: opts.filter || 0,
         c: opts.category || '1_0',
@@ -154,7 +154,7 @@ const searchByUserAndByPage = async (user = null, term = '', p = null, n = null,
 
   if (!p) throw new Error('[Nyaapi]: No page given on search by page demand.')
 
-  const data = await request.get(`${URI}user/${user}`, {
+  const data = await request.get(`${config.url}user/${user}`, {
     qs: {
       f: opts.filter || 0,
       c: opts.category || '1_0',
@@ -282,7 +282,7 @@ const list = (c, p, opts = {}) => {
       p = p || opts.p
     }
 
-    request.get(URI, {
+    request.get(config.url, {
       qs: {
         f: opts.filter || 0,
         c: c || '1_0',
