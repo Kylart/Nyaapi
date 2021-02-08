@@ -1,7 +1,5 @@
-const request = require('request-promise')
 const { extractFromHTML } = require('./scrap.js')
 
-const URI = require('./url.json').url
 const timeout = (time) => new Promise(resolve => setTimeout(resolve, time))
 
 /**
@@ -10,58 +8,39 @@ const timeout = (time) => new Promise(resolve => setTimeout(resolve, time))
  * @param {string} term Keywords describing the research.
  * @param {number} p    The page you want to look for.
  * @param {object} opts Research options as described on the documentation.
- *
- * @returns {promise}
  */
+async function searchPage (term = '', p, opts = {}, includeMaxPage) {
+  if (!term) throw new Error('[Nyaapi]: No term was given on search demand.')
 
-const searchPage = (term = '', p, opts = {}, includeMaxPage) => {
-  return new Promise((resolve, reject) => {
-    if (!term) {
-      reject(new Error('[Nyaapi]: No term was given on search demand.'))
-      return
+  if (typeof term === 'object') {
+    opts = term
+    term = opts.term
+    p = p || opts.p
+  }
+
+  if (!p) throw new Error('[Nyaapi]: No page number was given on search page demand.')
+
+  const { data } = await this.cli.get('/', {
+    params: {
+      f: opts.filter || 0,
+      c: opts.category || '1_0',
+      q: term,
+      p: p,
+      s: opts.sort || 'id',
+      o: opts.direction || 'desc'
     }
-
-    if (typeof term === 'object') {
-      opts = term
-      term = opts.term
-      p = p || opts.p
-    }
-
-    if (!p) {
-      reject(new Error('[Nyaapi]: No page number was given on search page demand.'))
-      return
-    }
-
-    request.get(URI, {
-      qs: {
-        f: opts.filter || 0,
-        c: opts.category || '1_0',
-        q: term,
-        p: p,
-        s: opts.sort || 'id',
-        o: opts.direction || 'desc'
-      }
-    })
-      .then((data) => {
-        const results = extractFromHTML(data, includeMaxPage)
-
-        resolve(results)
-      })
-      .catch(/* istanbul ignore next */ (err) => reject(err))
   })
+
+  return extractFromHTML(data, includeMaxPage)
 }
 
 /**
- *
  * Research anything you desire on nyaa.si and get all the results.
  *
  * @param {string} term Keywords describing the research.
  * @param {Object} opts Research options as described on the documentation.
- *
- * @returns {promise}
  */
-
-const searchAll = async (term = '', opts = {}) => {
+async function searchAll (term = '', opts = {}) {
   if (!term || (typeof term === 'object' && !term.term)) {
     throw new Error('[Nyaapi]: No search term was given.')
   }
@@ -71,32 +50,30 @@ const searchAll = async (term = '', opts = {}) => {
     term = opts.term
   }
 
-  const { results: fResults, maxPage } = await searchPage(term, 1, opts, true)
+  const { results: tempResults, maxPage } = await this.searchPage(term, 1, opts, true)
+
   const searchs = []
   for (let page = 2; page <= maxPage; ++page) {
     const makeSearch = () =>
-      searchPage(term, page, opts)
+      this.searchPage(term, page, opts)
         .catch(e => timeout(1000).then(makeSearch))
+
     searchs.push(makeSearch())
   }
 
   const results = await Promise.all(searchs)
 
-  return results.reduce((c, v) => c.concat(v), fResults)
+  return results.reduce((acc, result) => acc.concat(result), tempResults)
 }
 
 /**
- *
  * Research anything you desire on nyaa.si.
  *
  * @param {string} term Keywords describing the research.
  * @param {number} n    Number of results wanted (Defaults to null).
  * @param {Object} opts Research options as described on the documentation.
- *
- * @returns {promise}
  */
-
-const search = async (term = '', n = null, opts = {}) => {
+async function search (term = '', n = null, opts = {}) {
   if (!term || (typeof term === 'object' && !term.term)) {
     throw new Error('[Nyaapi]: No term given on search demand.')
   }
@@ -109,7 +86,7 @@ const search = async (term = '', n = null, opts = {}) => {
 
   // If there is no n, then the user's asking for all the results, right?
   if (!n) {
-    return searchAll(term, opts)
+    return this.searchAll(term, opts)
   } else {
     let results = []
     let tmpData = []
@@ -118,7 +95,7 @@ const search = async (term = '', n = null, opts = {}) => {
     const maxPage = Math.ceil(n / 75)
 
     while (_continue && page <= maxPage) {
-      tmpData = await searchPage(term, page, opts)
+      tmpData = await this.searchPage(term, page, opts)
       results = results.concat(tmpData)
       ++page
       _continue = tmpData.length
@@ -129,7 +106,6 @@ const search = async (term = '', n = null, opts = {}) => {
 }
 
 /**
- *
  * Research anything you desire according to a certain user and a specific page on nyaa.si.
  *
  * @param {string} user The user you want to spy on.
@@ -140,8 +116,7 @@ const search = async (term = '', n = null, opts = {}) => {
  *
  * @returns {promise}
  */
-
-const searchByUserAndByPage = async (user = null, term = '', p = null, n = null, opts = {}) => {
+async function searchByUserAndByPage (user = null, term = '', p = null, n = null, opts = {}) {
   if (!user) throw new Error('[Nyaapi]: No user given on search demand.')
 
   if (typeof user === 'object') {
@@ -154,8 +129,8 @@ const searchByUserAndByPage = async (user = null, term = '', p = null, n = null,
 
   if (!p) throw new Error('[Nyaapi]: No page given on search by page demand.')
 
-  const data = await request.get(`${URI}user/${user}`, {
-    qs: {
+  const { data } = await this.cli.get(`/user/${user}`, {
+    params: {
       f: opts.filter || 0,
       c: opts.category || '1_0',
       q: term || '',
@@ -169,17 +144,13 @@ const searchByUserAndByPage = async (user = null, term = '', p = null, n = null,
 }
 
 /**
- *
  * Research anything you desire according to a certain user on nyaa.si and get all the results.
  *
  * @param {string} user The user you want to spy on.
  * @param {string} term Keywords describing the research.
  * @param {Object} opts Research options as described on the documentation.
- *
- * @returns {promise}
  */
-
-const searchAllByUser = async (user = null, term = '', opts = {}) => {
+async function searchAllByUser (user = null, term = '', opts = {}) {
   if (!user || (typeof user === 'object' && user && !user.user)) {
     throw new Error('[Nyaapi]: No user was given.')
   }
@@ -203,10 +174,10 @@ const searchAllByUser = async (user = null, term = '', opts = {}) => {
     opts.p = page
 
     try {
-      tmpData = await searchByUserAndByPage(opts)
+      tmpData = await this.searchByUserAndByPage(opts)
       ++page
     } catch (e) {
-      if (e.statusCode !== 404) throw e
+      if (e.statusCode !== 404) { throw e }
 
       break
     }
@@ -216,18 +187,14 @@ const searchAllByUser = async (user = null, term = '', opts = {}) => {
 }
 
 /**
- *
  * Research anything you desire according to a certain user on nyaa.si
  *
  * @param {string} user The user you want to spy on.
  * @param {string} term Keywords describing the research.
  * @param {number} n    Number of results wanted on this page (Defaults to null).
  * @param {Object} opts Research options as described on the documentation.
- *
- * @returns {promise}
  */
-
-const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
+async function searchByUser (user = null, term = '', n = null, opts = {}) {
   if (!user || (typeof user === 'object' && user && !user.user)) {
     throw new Error('[Nyaapi]: No user given on search demand.')
   }
@@ -241,7 +208,7 @@ const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
 
   // If there is no n, then the user's asking for all the results, right?
   if (!n) {
-    return searchAllByUser(user, term, opts)
+    return this.searchAllByUser(user, term, opts)
   } else {
     let results = []
     let tmpData = []
@@ -254,7 +221,7 @@ const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
       opts.term = term
       opts.p = page
 
-      tmpData = await searchByUserAndByPage(opts)
+      tmpData = await this.searchByUserAndByPage(opts)
       results = results.concat(tmpData)
       ++page
       _continue = tmpData.length
@@ -270,33 +237,25 @@ const searchByUser = async (user = null, term = '', n = null, opts = {}) => {
  * @param {string} c    Category to list.
  * @param {number} p    Page of the category.
  * @param {object} opts Research options as described on the documentation.
- *
- * @returns {promise}
  */
+async function list (c, p, opts = {}) {
+  if (typeof c === 'object') {
+    opts = c
+    c = opts.c
+    p = p || opts.p
+  }
 
-const list = (c, p, opts = {}) => {
-  return new Promise((resolve, reject) => {
-    if (typeof c === 'object') {
-      opts = c
-      c = opts.c
-      p = p || opts.p
+  const { data } = this.cli.get('/', {
+    params: {
+      f: opts.filter || 0,
+      c: c || '1_0',
+      p: p || 1,
+      s: opts.sort || 'id',
+      o: opts.direction || 'desc'
     }
-
-    request.get(URI, {
-      qs: {
-        f: opts.filter || 0,
-        c: c || '1_0',
-        p: p || 1,
-        s: opts.sort || 'id',
-        o: opts.direction || 'desc'
-      }
-    })
-      .then((data) => {
-        const results = extractFromHTML(data, true)
-        resolve(results)
-      })
-      .catch(/* istanbul ignore next */ (err) => reject(err))
   })
+
+  return extractFromHTML(data, true)
 }
 
 module.exports = {

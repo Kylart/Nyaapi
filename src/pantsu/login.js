@@ -1,7 +1,3 @@
-const request = require('request-promise')
-
-const URI = require('./url.json').url
-
 /**
  * Allows to log into nyaa.pantsu.cat
  *
@@ -11,20 +7,14 @@ const URI = require('./url.json').url
  *
  * @returns {promise}
  */
+async function login (credentials = {}) {
+  if (!credentials.username || !credentials.password) {
+    throw new Error('[Nyaapi]: No username or password were given on login demand.')
+  }
 
-const login = (credentials = {}) => {
-  return new Promise((resolve, reject) => {
-    if (!credentials.username || !credentials.password) {
-      reject(new Error('[Nyaapi]: No username or password were given on login demand.'))
-      return
-    }
+  const { data } = await this.cli.post('/login', credentials)
 
-    request.post(URI + 'login', {
-      json: credentials
-    })
-      .then((data) => resolve(data))
-      .catch((err) => reject(err))
-  })
+  return data
 }
 
 module.exports = {

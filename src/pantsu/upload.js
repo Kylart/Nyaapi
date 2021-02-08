@@ -1,45 +1,41 @@
-/**
- * Resources explaining the choices
- *
- * https://github.com/gin-gonic/gin/issues/931
- * https://github.com/axios/axios/issues/623
- */
-
 const fs = require('fs')
-const req = require('request-promise')
-const omit = require('lodash.omit')
-
-const URI = require('./url.json').url
+const FormData = require('form-data')
 
 /**
  * Allows the uploading of torrent file to nyaa.pantsu.cat
  *
  * @param {Object} opts Options.
  *
- * @returns {promise}
+ * @returns {Promise<Object>}
  */
+async function upload (opts = {}) {
+  if ((!opts.magnet && !opts.torrent) || !opts.token || !opts.username) {
+    throw new Error('[Nyaapi]: No file/torrent, token or username were given.')
+  }
 
-const upload = (opts = {}) => {
-  return new Promise((resolve, reject) => {
-    if ((!opts.magnet && !opts.torrent) || !opts.token || !opts.username) {
-      reject(new Error('[Nyaapi]: No file/torrent, token or username were given.'))
-      return
-    }
+  if (opts.torrent) {
+    opts.torrent = fs.createReadStream(opts.torrent)
+  }
 
-    if (opts.torrent) {
-      opts.torrent = fs.createReadStream(opts.torrent)
-    }
+  const form = new FormData()
 
-    req.post({
-      url: `${URI}upload`,
-      headers: {
-        Authorization: opts.token
-      },
-      formData: omit(opts, 'token')
+  Object.entries(opts)
+    .forEach(([key, value]) => {
+      if (key === 'torrent') return form.append('torrent', fs.createReadStream(opts.torrent))
+      if (key === 'token') return
+
+      form.append(key, value)
     })
-      .then((data) => resolve(data))
-      .catch((err) => reject(err))
-  })
+
+  return this.cli.post(
+    '/upload',
+    form, {
+      headers: {
+        Authorization: opts.token,
+        ...form.getHeaders()
+      }
+    }
+  )
 }
 
 module.exports = {

@@ -1,15 +1,14 @@
-const { list, search, searchAll, searchAllByUser, searchByUser, searchByUserAndByPage, searchPage } = require('./search.js')
-const { infoRequest } = require('./info.js')
-const { upload } = require('./upload.js')
+const helpers = require('./helpers')
+
+const search = require('./search.js')
+const info = require('./info.js')
+const upload = require('./upload.js')
 
 module.exports = {
-  list,
-  search,
-  searchAll,
-  searchPage,
-  searchByUser,
-  searchAllByUser,
-  searchByUserAndByPage,
-  infoRequest,
-  upload
+  ...helpers,
+  cli: helpers.config.cli,
+
+  ...search,
+  ...info,
+  ...upload
 }
