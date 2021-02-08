@@ -29,10 +29,10 @@
   },
   "homepage": "https://github.com/Kylart/Nyaapi#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.3",
-    "lodash.omit": "^4.5.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.5"
+    "form-data": "^3.0.0",
+    "lodash.omit": "^4.5.0"
   },
   "devDependencies": {
     "ava": "^2.4.0",
@@ -54,10 +54,12 @@
       "**/*.test.js",
       "**/node_modules/**",
       "src/si/upload.js",
+      "src/si/helpers/**",
       "src/pantsu/upload.js",
       "src/pantsu/update.js",
       "src/pantsu/login.js",
-      "src/pantsu/header.js"
+      "src/pantsu/header.js",
+      "src/pantsu/helpers/**"
     ]
   },
   "pre-commit": [

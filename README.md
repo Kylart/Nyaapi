@@ -75,6 +75,15 @@ console.log(pantsu)
  */
 ```
 
+# Configuration
+For both `si` and `pantsu` you can update the base URL for the calls this way:
+```javascript
+const { si, pantsu } = require('nyaapi')
+
+si.config.updateBaseUrl('https://nyaa.whatever')
+pantsu.config.updateBaseUrl('https://nyaa.whatever')
+```
+
 It is important to know that all the pantsu methods are fully based on [the offcial api of nyaa.pantsu.cat](https://nyaa.pantsu.cat/apidoc).
 
 > For a complete documentation, please check out the [wiki](https://github.com/Kylart/Nyaapi/wiki) for a tour of all the methods and how to use them.

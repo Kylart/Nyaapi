@@ -1,28 +1,17 @@
-const request = require('request-promise')
-
-const URI = require('./url.json').url
-
 /**
  * Allows to check a user profile from its ID.
  *
  * @param {number|string} id The ID of the user you want to check the profile.
- *
- * @returns {promise}
  */
 
-const checkUser = (id) => {
-  return new Promise((resolve, reject) => {
-    if (!id) {
-      reject(new Error('[Nyaapi]: No ID was given on user check demand.'))
-      return
-    }
+async function checkUser (id) {
+  if (!id) throw new Error('[Nyaapi]: No ID was given on user check demand.')
 
-    request.get(URI + 'profile', {
-      qs: { id }
-    })
-      .then((data) => resolve(JSON.parse(data)))
-      .catch(/* istanbul ignore next */ (err) => reject(err))
+  const { data } = await this.cli.get('/profile', {
+    params: { id }
   })
+
+  return data
 }
 
 module.exports = {

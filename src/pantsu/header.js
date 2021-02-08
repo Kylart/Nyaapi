@@ -1,7 +1,3 @@
-const request = require('request-promise')
-
-const URI = require('./url.json').url
-
 /**
  * Allows to request torrent's head its ID.
  *
@@ -9,18 +5,12 @@ const URI = require('./url.json').url
  *
  * @returns {promise}
  */
+async function checkHeader (id) {
+  if (!id) throw new Error('[Nyaapi]: No ID was given on torrent head request.')
 
-const checkHeader = (id) => {
-  return new Promise((resolve, reject) => {
-    if (!id) {
-      reject(new Error('[Nyaapi]: No ID was given on torrent head request.'))
-      return
-    }
+  const { data } = await this.cli.get(`/view/${id}`)
 
-    request.get(`${URI}view/${id}`)
-      .on('response', (response) => resolve(response.statusMessage))
-      .catch((err) => reject(err))
-  })
+  return data
 }
 
 module.exports = {

@@ -25,6 +25,7 @@ test(`Search method gives ${number} results with 3 arguments`, async t => {
 
     t.is(data.length, number)
   } catch (e) {
+    console.log(e)
     t.fail(e.message)
   }
 })
@@ -304,5 +305,38 @@ test('SearchByUserAndByPage method returns an error if no page is given', async 
     t.fail()
   } catch (e) {
     t.true(e.message.includes('[Nyaapi]'))    
+  }
+})
+
+test('infoRequest method returns an error if invalid id is given', async t => {
+  try {
+    const data = await si.infoRequest('blabla')
+
+    t.fail()
+  } catch (e) {
+    t.true(e.message.includes('[Nyaapi]'))
+  }
+})
+
+test('infoRequest method returns an error if no id is given', async t => {
+  try {
+    const data = await si.infoRequest()
+
+    t.fail()
+  } catch (e) {
+    t.true(e.message.includes('[Nyaapi]'))
+  }
+})
+
+test('infoRequest method returns a valid result', async t => {
+  try {
+    const id = 537126
+    const data = await si.infoRequest(id)
+
+    t.is(typeof data, 'object')
+    t.is(data.id, id)
+    t.is(typeof data.info, 'object')
+  } catch (e) {
+    t.fail(e.message)
   }
 })

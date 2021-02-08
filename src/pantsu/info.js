@@ -1,7 +1,3 @@
-const request = require('request-promise')
-
-const URI = require('./url.json').url
-
 /**
  * Request torrent information according to its ID.
  *
@@ -10,17 +6,12 @@ const URI = require('./url.json').url
  * @returns {promise}
  */
 
-const infoRequest = (id) => {
-  return new Promise((resolve, reject) => {
-    if (!id) {
-      reject(new Error('[Nyaapi]: No ID given on request demand.'))
-      return
-    }
+async function infoRequest (id) {
+  if (!id) throw new Error('[Nyaapi]: No ID given on request demand.')
 
-    request.get(`${URI}view/${id}`)
-      .then((data) => resolve(JSON.parse(data)))
-      .catch(/* istanbul ignore next */ (err) => reject(err))
-  })
+  const { data } = await this.cli.get(`/view/${id}`)
+
+  return data
 }
 
 module.exports = {
