@@ -14,11 +14,11 @@ function extractFromHTML (data, includeMaxPage = false) {
   $('tr').slice(1).each(function () {
     // speical handling for hash, as very rarely the download option will be unavailable and missing.
     let hash = ""
-    let hashElement = _getChild(this, 3).find('a:nth-child(2)').attr('href')
-    if (!hashElement) 
-      hashElement = _getChild(this, 3).find('a:nth-child(1)').attr('href')
-    if (hashElement)
-      hash = hashElement.match(/btih:(\w+)/)[1]
+    let magnetElement = _getChild(this, 3).find('a:nth-child(2)').attr('href')
+    if (!magnetElement) 
+      magnetElement = _getChild(this, 3).find('a:nth-child(1)').attr('href')
+    // magnetElement is assumed to be valid, if the magnet option is unavailable the torrent wouldn't be present.
+    hash = magnetElement.match(/btih:(\w+)/)[1]
 
     const result = {
       id: _getChild(this, 2).find('a:not(.comments)').attr('href').replace('/view/', ''),
@@ -28,7 +28,7 @@ function extractFromHTML (data, includeMaxPage = false) {
       filesize: _getChild(this, 4).text(),
       category: _getChild(this, 1).find('a').attr('href').replace('/?c=', '').replace(/\d{1,2}$/, '0'),
       sub_category: _getChild(this, 1).find('a').attr('href').replace('/?c=', ''),
-      magnet: _getChild(this, 3).find('a:nth-child(2)').attr('href'),
+      magnet: magnetElement,
       torrent: baseUrl + _getChild(this, 3).find('a:nth-child(1)').attr('href'),
       seeders: _getChild(this, 6).text(),
       leechers: _getChild(this, 7).text(),
