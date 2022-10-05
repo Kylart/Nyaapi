@@ -245,7 +245,7 @@ async function list (c, p, opts = {}) {
     p = p || opts.p
   }
 
-  const { data } = this.cli.get('/', {
+  const { data } = await this.cli.get('/', {
     params: {
       f: opts.filter || 0,
       c: c || '1_0',
